@@ -12,23 +12,29 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json())
 
-let etfHoldings = [];
+let etfHoldings = {};
 let bitcoinUSD = 0;
 let XAUPLN = 0;
-// Waluty załatwie fetch we frontendzie
 
 let NUM_OF_ETFS;
 let downloadedEtfsCount = 0;
+
+const isDeveloped = {
+  SWDA: true,
+  IWDA: true,
+  IS3N: false,
+  ETFBM40TR: false
+}
 
 const getEtfData = function(url, res) {
   axios(url).then(response => {
     const html = response.data;
     const $ = cheerio.load(html);
   
-    let etfName, value, when, curr, etfSymbol;
+    let etfName, value, curr, etfSymbol;
     let vset = false;
 
-    $('.font-bold', html).each(function () {
+    $('.font-bold').each(function () {
       let v = $(this).text().trim();
       v = v.replace('.', '');
       v = v.replace(',', '.');
@@ -39,34 +45,22 @@ const getEtfData = function(url, res) {
       }
     });
     
-    $('.text-xl.text-left.font-bold.leading-7', html).each(function () {
+    $('.text-xl.text-left.font-bold.leading-7').each(function () {
       etfName = $(this).text().trim();
       etfSymbol = etfName.substring(etfName.lastIndexOf('(')+1, etfName.lastIndexOf(')'));
     });
-    // $('.flex.items-center.text-xs\/5.font-normal', html).each(function () {
-    //   const t = $(this.children).text().trim()
-    //   let start = t.indexOf("w  ")
-    //   curr =  t.substring(start+3, start+6);
-    //   return false
-    // });
-    // $('div.flex.items-center.p-0.gap-1.text-xs.leading-4.font-normal.text-\[\#5B616E\]', html).each(function () {
-    //   const text = $(this).text().trim();
-    //   let end = text.indexOf('</time>');
-    //   const start = text.indexOf(">", end-15);
-    //   when = text.substring(start+1, end);
-    // });
-    when = '';
-    curr = '';
+
+    $('[data-test="currency-in-label"]').each(function () {
+      let temp = $(this).text().trim()
+      curr = temp.substring(temp.length-3, temp.length)
+    })
   
-    etfHoldings.push({
-      etfSymbol,
-      'data': {
-        etfName,
-        value,
-        curr,
-        when
-      }
-    });
+    etfHoldings[etfSymbol] = {
+      etfName,
+      value,
+      curr,
+      developedMarket: isDeveloped[etfSymbol]
+    }
     downloadedEtfsCount++;
 
     if (downloadedEtfsCount === NUM_OF_ETFS) res.json(etfHoldings);
@@ -75,37 +69,10 @@ const getEtfData = function(url, res) {
 };
 
 const getBTCData = function(res) {
-  axios('https://pl.investing.com/crypto/bitcoin').then(response => {
-    const html = response.data;
-    const $ = cheerio.load(html);
-  
-    let value, when;
-  
-    let vset = false;
-
-    $('.font-bold', html).each(function () {
-      let v = $(this).text().trim();
-      v = v.replace('.', '');
-      v = v.replace(',', '.');
-      const regex = '^[0-9]+.[0-9]+$';
-      if(vset == false && v.match(regex) != null) {
-        value = v;
-        vset = true;
-      }
-    });
-
-    // $('.bottom.lighterGrayFont.arial_11', html).each(function () {
-    //   const text = $(this).text().trim();
-    //   when = text.split(' ')[0];
-    // });
-
-    when = '';
-    
+  axios.get('https://blockchain.info/tobtc?currency=USD&value=1').then(response => {
     bitcoinUSD = {
-      value,
-      when
+      value: Math.round(100/response.data)/100
     };
-
     res.json(bitcoinUSD);
   
   }).catch(err => console.log(err));
@@ -147,7 +114,7 @@ app.listen(PORT, () => console.log(`server running on PORT ${PORT}`));
 app.get('/etf', (req, res) => {
   NUM_OF_ETFS = 4;
   downloadedEtfsCount = 0;
-  etfHoldings = [];
+  etfHoldings = {};
   getEtfData('https://pl.investing.com/etfs/ishares-core-msci-em-imi?cid=994133', res);
   getEtfData('https://pl.investing.com/etfs/ishares-msci-world---acc?cid=47285', res);
   getEtfData('https://pl.investing.com/etfs/ishares-msci-world---acc?cid=995447', res);
@@ -180,15 +147,21 @@ app.post('/update-etf-is3n', (req, res) => {
   res.end();
 });
 
-app.post('/update-etf-mwig40tr', (req, res) => {
+app.post('/update-etf-etfbm40tr', (req, res) => {
   const data = JSON.stringify(req.body);
-  fs.writeFileSync('etf-mwig40tr.json', data);
+  fs.writeFileSync('etf-etfbm40tr.json', data);
   res.end();
 });
 
-app.post('/update-obligacje', (req, res) => {
+app.post('/update-obligacje10', (req, res) => {
   const data = JSON.stringify(req.body);
-  fs.writeFileSync('obligacje.json', data);
+  fs.writeFileSync('obligacje10.json', data);
+  res.end();
+});
+
+app.post('/update-obligacje4', (req, res) => {
+  const data = JSON.stringify(req.body);
+  fs.writeFileSync('obligacje4.json', data);
   res.end();
 });
 
@@ -216,8 +189,14 @@ app.post('/update-structure', (req, res) => {
   res.end();
 });
 
-app.get('/history-obligacje', (req, res) => {
-  const rawdata = fs.readFileSync('obligacje.json');
+app.get('/history-obligacje10', (req, res) => {
+  const rawdata = fs.readFileSync('obligacje10.json');
+  const data = JSON.parse(rawdata);
+  res.json(data);
+});
+
+app.get('/history-obligacje4', (req, res) => {
+  const rawdata = fs.readFileSync('obligacje4.json');
   const data = JSON.parse(rawdata);
   res.json(data);
 });
@@ -252,8 +231,8 @@ app.get('/history-etf-is3n', (req, res) => {
   res.json(data);
 });
 
-app.get('/history-etf-mwig40tr', (req, res) => {
-  const rawdata = fs.readFileSync('etf-mwig40tr.json');
+app.get('/history-etf-etfbm40tr', (req, res) => {
+  const rawdata = fs.readFileSync('etf-etfbm40tr.json');
   const data = JSON.parse(rawdata);
   res.json(data);
 });
