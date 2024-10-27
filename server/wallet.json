@@ -1,0 +1,51 @@
+{
+    "etf": {
+        "is3n": {
+            "entries": [
+                {"date": "2020-11-20", "price": 1260.29, "count": 10, "unitPrice": 28, "exchangeRate": 4.47, "fee": 9.5},
+                {"date": "2022-12-29", "price": 2277.87, "count":18, "unitPrice": 26.93, "exchangeRate": 4.7, "fee": 19}
+            ]
+        },
+        "swda": {
+            "entries": [
+                {"date":"2020-12-11","price":1570.68,"count":6,"unitPrice":53.92,"exchangeRate":4.83,"fee":9.5}
+            ]
+        },
+        "iwda": {
+            "entries": [
+                {"date": "2022-12-29", "price": 2570.67, "count": 8, "unitPrice": 68.37, "exchangeRate": 4.7 , "fee": 19}
+            ]
+        },
+        "vwra": {
+            "entries": [
+
+            ]
+        },
+        "etfbm40tr": {
+            "entries": [
+                {"date": "2021-09-20","price": 371.1, "count": 5,"unitPrice": 73.22, "exchangeRate": 1, "fee": 5}
+            ]
+        }
+    },
+    "bond": {
+        "edo10": {
+            "entries": [
+                {"date":"2020-11-13","price":2700,"count":27,"int1":1.73,"int2":6.9,"int3":18.2,"int4":9.2,"int5":null,"int6":null,"int7":null,"int8":null,"int9":null,"int10":null}
+            ]
+        }
+    },
+    "commodity": {
+        "gold": {
+            "entries": [
+                {"date":"2022-09-01","count": 0.5,"unitPrice":8426}
+            ]
+        }
+    },
+    "crypto": {
+        "btc": {
+            "entries": [
+                {"date":"2021-09-20","price":99.99,"count":0.00057496,"unitPrice":173157.85,"feeBTC":0.00000249}
+            ]
+        }
+    }
+}

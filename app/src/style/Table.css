@@ -1,0 +1,208 @@
+.table {
+    width: 100%;
+    font-size: 1.8rem;
+    border-collapse: collapse;
+    border-radius: 9px;
+    border-style: hidden;
+    box-shadow: 0 0 0 2px #666;
+    overflow: hidden;
+}
+.table--not-round {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.table th {
+    background-color: #e67e22;
+}
+
+.table tr {
+    border: 2px solid #666;
+}
+
+.table tr:nth-child(odd) {
+    background-color: #e8e8e8;
+}
+
+.table th, .table td {
+    padding: 0.5rem;
+    text-align: center;
+    border-left: 1px solid #000;
+}
+
+dialog {
+    width: 50%;
+    padding: 18px;
+    position: fixed;
+    top: 10%;
+    height: 80vh;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    left: 25%;
+    font-size: 20px;
+    border-radius: 20px;
+    -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+dialog::-webkit-scrollbar {
+  display: none;
+}
+
+dialog::backdrop {
+  background-color: rgba(0,0,0,0.5);
+}
+
+
+.table-footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.add-new, .summary, .form {
+    margin-left: -2px;
+    display: inline-block;
+    border: 3px solid #666;
+    border-bottom-right-radius: 9px;
+    border-bottom-left-radius: 9px;
+    overflow: hidden;
+    padding: 5px;
+}
+.summary {
+    font-size: 1.8rem;
+    font-weight: 500;
+    padding: 0.5rem 2rem;
+    background-color: #e67e22;
+}
+
+input[type="number"], input[type="date"] {
+    border-radius: 6px;
+    border: 1px solid #666;
+    font-size: 1.8rem;
+    font-family: inherit;
+    padding: 0.2rem 0.5rem;
+    margin-right: 1.1rem;
+  }
+  
+  input[type="date"] {
+    text-align: right;
+  }
+
+  .date--obligacje, .date--krypto {
+    width: 12.2rem;
+  }
+.count--obligacje {
+    width: 5rem;
+    text-align: center;
+}
+
+.price--krypto {
+  width: 10.5rem;
+  text-align: center;
+}
+
+.countpro--krypto {
+  width: 18.4rem;
+  text-align: center;
+}
+
+.pro--krypto {
+  width: 13.4rem;
+  text-align: center;
+}
+
+.btn-add {
+    width: 3rem;
+    height: 3rem;
+    background-color: #e67e22;
+    font-weight: 500;
+    font-size: 2.4rem;
+    border: none;
+    border-radius: 100px;
+    margin-left: 1rem;
+    cursor: pointer;
+  }
+
+  .btn-add:hover {
+    background-color: #ce701e;
+  }
+
+#modal {
+  position: relative;
+}
+
+.controls {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+  .modal-btn, .btn-edit {
+    width: 3rem;
+    height: 3rem;
+    font-weight: 500;
+    font-size: 2.4rem;
+    border: none;
+    border-radius: 10px;
+    margin-left: 1rem;
+    cursor: pointer;
+  }
+  .btn-edit {
+    border: 1px #666 solid;
+  }
+
+  .modal-btn-cross {
+    background-color: rgb(255, 56, 56);
+  }
+  .modal-btn-cross:hover {
+    background-color: rgb(231, 44, 44);
+  }
+  .modal-btn-tick {
+    background-color: rgb(93, 188, 93);
+  }
+  .modal-btn-tick:hover {
+    background-color: rgb(62, 165, 62);
+  }
+  .modal-btn-bin:hover, .btn-edit:hover {
+    background-color: rgb(232, 232, 232);
+  }
+  
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+
+  td .input-fill, td .input-fill-short, td .input-fill-short-last  {
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+  }
+  td .input-fill-short {
+    width: 60%;
+  }
+  td .input-fill-short-last {
+    width: 50%;
+    margin-left: 2rem;
+  }
+  .no-border-td  {
+    background-color: #fdf2e9 !important;
+  }
+  .no-border-td td {
+    border: none !important;
+  }
+  
+  .btn-add {
+    width: 3rem;
+    height: 3rem;
+    background-color: #e67e22;
+    font-weight: 500;
+    font-size: 2.4rem;
+    border: none;
+    border-radius: 100px;
+    margin-left: 1rem;
+  }
