@@ -43,3 +43,46 @@
   border-radius: 9px;
   width: 35%;
 }
+
+.buy-panel {
+  background-color: #eee;
+  border: 1px solid #bbb;
+  padding: 8px;
+  border-radius: 9px;
+  font-size: 20px;
+  margin-bottom: 40px;
+}
+
+.buy-panel label {
+  margin-right: 30px;
+}
+
+.buy-panel input, .buy-panel select {
+  margin-left: 10px;
+}
+
+.buy-panel button {
+  background-color: #e67e22;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.interval-btns {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+}
+
+.interval-btns button {
+  background-color: #e67e22;
+  color: white;
+  padding: 6px 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 12px;
+}

@@ -75,13 +75,14 @@ dialog::backdrop {
     background-color: #e67e22;
 }
 
-input[type="number"], input[type="date"] {
+input[type="number"], input[type="date"], select {
     border-radius: 6px;
     border: 1px solid #666;
     font-size: 1.8rem;
     font-family: inherit;
     padding: 0.2rem 0.5rem;
     margin-right: 1.1rem;
+    width: 125px;
   }
   
   input[type="date"] {

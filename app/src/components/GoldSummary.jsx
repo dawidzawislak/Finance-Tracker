@@ -1,17 +1,13 @@
 import React from "react"
+import { round } from "../utils"
 
-function GoldSummary(props) {
-    const mass = props.data.reduce((acc, entry) => acc + Number(entry.masa), 0)
-    const priceAll = props.data.reduce((acc, entry) => acc + (Number(entry.cenaOZ) * Number(entry.masa)), 0)
-    const avgPrice = Math.round(priceAll*100/mass)/100
-    const [currPriceSPOT, setCurrPriceSPOT] = React.useState(0)
-    const currPrice = Math.round(currPriceSPOT * 1.049 * 100) / 100
+function GoldSummary({wallet, price}) {
+    const goldData = wallet['commodity']['gold']['entries']
 
-    React.useEffect(() => {
-        fetch('http://localhost:8000/xaupln').then(response => response.json()).then(data => {
-            setCurrPriceSPOT(Number(data.value))
-        })
-    }, [])
+    const mass = goldData.reduce((acc, entry) => acc + entry.count, 0)
+    const priceAll = goldData.reduce((acc, entry) => acc + (entry.unitPrice * entry.count), 0)
+    const avgPrice = round(priceAll/mass)
+    const currPrice = round(price['commodity']['gold']['value'] * 1.049)
 
     const currValue = currPrice * mass
 
@@ -25,18 +21,15 @@ function GoldSummary(props) {
         deltaStyle.color = 'red';
     }
 
-    if (currPrice) props.updateVal(currValue)
-
     return (
         <div className="etf-summary">
-            <h3 className="heading-tetriary">Średnia cena zakupu za 1oz: {avgPrice} PLN </h3>
+            <h3 className="heading-tetriary">Avg. purchase price/1oz.: {avgPrice} PLN </h3>
             <br />
-            <h3 className="heading-tetriary">Posiadana ilość: {mass} oz</h3>
-            <h3 className="heading-tetriary">Cena: {priceAll} PLN</h3>
+            <h3 className="heading-tetriary">Quantity held: {mass} oz.</h3>
+            <h3 className="heading-tetriary">Price: {priceAll} PLN</h3>
             <br />
-            <h3 className="heading-tetriary">Aktualna cena złota / 1oz (spot):  {currPriceSPOT} PLN</h3>
-            <h3 className="heading-tetriary">Aktualna cena złota / 1oz (zakup):  {currPrice} PLN</h3>
-            <h3 className="heading-tetriary">Aktualna wartość kupionego złota: <span style={deltaStyle}>{currValue} zł ({delta}%)</span></h3>
+            <h3 className="heading-tetriary">Current price/1oz:  {currPrice} PLN</h3>
+            <h3 className="heading-tetriary">Current value: <span style={deltaStyle}>{currValue} zł ({delta}%)</span></h3>
         </div>
     )
 }

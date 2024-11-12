@@ -4,3 +4,50 @@
     margin-top: 40px;
     margin-bottom: 25px;
 }
+
+.tt {
+    padding: 10px;;
+}
+
+.checkboxes {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 70%;
+    margin: 0 auto;
+}
+
+.checkboxes div {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 16px;
+}
+
+.summary-table {
+    margin: 60px auto;
+    width: 95%;
+    font-size: 16px;
+    border-collapse: collapse;
+    border-radius: 9px;
+    border-style: hidden;
+    box-shadow: 0 0 0 1px #666;
+    overflow: hidden;
+}
+
+.summary-table tr:nth-child(odd) {
+    background-color: #e8e8e8;
+}
+
+.summary-table th {
+    border: 1px solid #666;
+    padding: 8px;
+    text-align: center;
+    background-color: #e67e22;
+}
+
+.summary-table td {
+    border: 1px solid #666;
+    padding: 8px;
+    text-align: center;
+}

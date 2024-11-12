@@ -4,6 +4,7 @@ import datetime
 from flask import Flask, request
 from flask_cors import CORS
 from bs4 import BeautifulSoup
+import os
 
 app = Flask(__name__)
 CORS(app)
@@ -13,12 +14,18 @@ avaiable_instruments = []
 
 stooq_mapping = {
     'vwra': 'vwra.uk',
-    'iwda': 'swda.uk',
+    'iwda': 'iwda.uk',
     'swda': 'swda.uk',
     'is3n': 'is3n.de',
     'etfbm40tr': 'etfbm40tr.pl',
+
+
     'btc': 'btcpln',
     'gold': 'xaupln',
+
+    'usdpln': 'usdpln',
+    'eurpln': 'eurpln',
+    'gbppln': 'gbppln',
 }
 
 investing_mapping = {
@@ -61,7 +68,7 @@ def get_values_from_time_range(entries, start_date: str, end_date: str):
     return values
 
 @app.route('/historical_data/<instrument>')
-def historical_data(instrument):
+def historical_data(instrument: str):
     if instrument not in stooq_mapping.keys():
         return "Instrument not avaiable!"
     
@@ -74,9 +81,13 @@ def historical_data(instrument):
         if instrument in curr_cache.keys():
             curr = curr_cache[instrument]
         else:
-            req = 'http://127.0.0.1/value/' + instrument
-            curr = json.loads(requests.get(req).text)['curr']
-            curr_cache[instrument] = curr
+            if instrument.find('pln') > -1:
+                curr = 'PLN'
+                curr_cache[instrument] = curr
+            else:
+                req = 'http://127.0.0.1/value/' + instrument
+                curr = json.loads(requests.get(req).text)['curr']
+                curr_cache[instrument] = curr
 
         return {'curr': curr, 'values': {key: entries[key] for key in entries if str_to_datetime(start) <= str_to_datetime(key) <= str_to_datetime(end)}}
 
@@ -117,7 +128,7 @@ def exchange_rates():
     req = requests.get("https://api.nbp.pl/api/exchangerates/tables/A/?format=json")
     if req.status_code == 200:
         rates = json.loads(req.text)[0]['rates']
-        exchange_rates = {}
+        exchange_rates = {'PLN': 1.0}
         for rate in rates:
             if rate['code'] in ['USD', 'EUR', 'GBP']:
                 exchange_rates[rate['code']] = rate['mid']
@@ -131,27 +142,33 @@ def wallet():
     with open('wallet.json', 'r') as f:
         return f.read()
 
+@app.route('/available/<instrument>')
+def avaiable(instrument):
+    if instrument == 'bond':
+        return ["edo10"]
+    elif instrument == 'etf':
+        return list(stooq_mapping.keys())[:-2]
+    elif instrument == 'crypto':
+        return ['btc']
+    elif instrument == 'commodity':
+        return ['gold']
+
 def download_instrument_data(instrument: str):
-    #req = requests.get(f'https://stooq.pl/q/d/l/?s={stooq_mapping[instrument]}&i=d&c=1')
-    if True: # req.status_code == 200:
+    req = requests.get(f'https://stooq.pl/q/d/l/?s={stooq_mapping[instrument]}&i=d&c=1')
+    if req.status_code == 200:
         with open(f"historical/{instrument}.json", 'w') as f:
             entries = {}
             last = None
             prev = datetime.date.today()
 
-            with open(f"abc.csv", 'r') as f1:
-                req = {}
-                req['text'] = f1.read()
-
-            for l in req['text'].split('\n')[1:]:
+            for l in req.text.split('\n')[1:]:
                 if l.strip() == "": continue
 
                 values = l.strip().split(';')
 
                 val = float(values[4])
-                # if instrument == 'swda':
-                #     val /= 100
-                val /= 100
+                if instrument == 'swda':
+                    val /= 100
 
                 current_date = prev + datetime.timedelta(days=1)
                 while current_date < str_to_datetime(values[0]):
@@ -171,10 +188,22 @@ def download_instrument_data(instrument: str):
     else:
         print(f"Request at https://stooq.pl/q/d/l/?s={instrument}&i=d&c=1 failed!")
 
+
+@app.route('/change_wallet', methods=['POST'])
+def change_wallet():
+    data = request.get_json()
+    
+    #print(data['bond']['edo10'])
+    print(data)
+
+    return {"message": "Data received", "data": data}, 200
+
 def main():
     for ins in stooq_mapping.keys():
-        download_instrument_data(ins)
-
+        if (not os.path.exists(f"historical/{ins}.json") or 
+            datetime.datetime.fromtimestamp(os.path.getmtime(f"historical/{ins}.json")) + datetime.timedelta(days=0.5) < datetime.datetime.now()):
+            download_instrument_data(ins)
+        
     app.run(host='127.0.0.1', port=8000)
 
 if __name__ == "__main__":

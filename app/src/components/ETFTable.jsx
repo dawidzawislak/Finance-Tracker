@@ -2,106 +2,39 @@ import "../style/Table.css"
 import EditEntryModal from "./EditEntryModal.jsx"
 import editIcon from '../assets/edit-icon.png'
 import React from "react"
+import { round } from "../utils"
 
-function ETFTable(props) {
-
-    const [formData, setFormData] = React.useState({
-        data: '',
-        cena: '',
-        ilosc: '',
-        cenaJedn: '',
-        kursWaluty: '',
-        prowizja: ''
-    })
-    const [toEdit, setToEdit] = React.useState({})
+function ETFTable({index, exchangeRates, wallet, setWallet, price}) {
     const [showModal, setModalVisibility] = React.useState(false)
-    const [idToChange, setIdToChange] = React.useState(-1)  
+    const [idToChange, setIdToChange] = React.useState(-1)
 
-    function handleChange(event) {
-        setFormData(prev => ({
-            ...prev,
-            [event.target.name]: event.target.value
-        }))
-    }
+    const etfData = wallet['etf'][index]['entries']
 
-    function updateData(newData) {
-        fetch('http://localhost:8000/update-etf-'+props.tickerName, {
-            method: 'POST',
-            body: JSON.stringify(newData),
-            headers: {
-                'Content-type': 'application/json; charset=UTF-8',
-            }
-        })
-
-        props.updateData(newData)
-    }
-
-    function addEntry(event) {
-        event.preventDefault()
-
-        const updated = [...props.data, formData]
-
-        updateData(updated)
-    }
+    console.log(etfData)
 
     function handleClick(key) {
-        setToEdit(props.data[key])
         setModalVisibility(true)
         setIdToChange(key)
     }
 
-    const description = [
-        {
-            desc: 'Data zakupu',
-            name: 'data',
-            type:"date"
-        },
-        {
-            desc: 'Cena [PLN]',
-            name: 'cena',
-            type:"number"
-        },
-        {
-            desc: 'Ilość jednostek',
-            name: 'ilosc',
-            type:"number"
-        },
-        {
-            desc: `Cena jednostki [${props.currency}]`,
-            name: 'cenaJedn',
-            type:"number"
-        },
-        {
-            desc: 'Prowizja [PLN]',
-            name: 'prowizja',
-            type:"number"
-        }
-    ]
+    const currPrice = price['etf'][index]['value']*exchangeRates[price['etf'][index]['curr']]
 
-    if (props.currency !== "PLN") {
-        description.push({
-            desc: `Kurs ${props.currency}`,
-            name: 'kursWaluty',
-            type:"number"
-        })
-    }
-
-    const form = description.map((obj, i) => (
-        <td key={i}><input className={'input-fill' + (i > 0 ? '-short' : '')} type={obj.type} name={obj.name} value={formData[obj.name]} onChange={handleChange} required /></td>
-    ))
-
-    const header = description.map((obj, i) => (
-        <th key={i}>{obj.desc}</th>
-    ))
-
-    const rows = props.data.map((entry, i) => (
-        <tr key={i}>
-            {description.map((obj,j) => (<td key={j}>{entry[obj.name]}</td>))}
-            <td><button onClick={() => handleClick(i)} className='btn-edit'>
+    const rows = etfData.map((entry, i) => {
+        return(
+            <tr key={i}>
+                <td>{entry.date}</td>
+                <td>{entry.price.toLocaleString('pl-PL')}</td>
+                <td>{entry.count}</td>
+                <td>{entry.unitPrice.toLocaleString('pl-PL')}</td>
+                {price['etf'][index]['curr'] != 'PLN' && <td>{round(entry.price / (entry.count * entry.unitPrice)).toLocaleString('pl-PL')}</td>}
+                <td>{entry.fee.toLocaleString('pl-PL')}</td>
+                <td>{round(entry.count*currPrice).toLocaleString('pl-PL')}</td>
+                <td><button onClick={() => handleClick(i)} className='btn-edit'>
                     <img src={editIcon} alt="edit-icon" width={14} />
                 </button></td>
-        </tr>
-    ))
+            </tr>
+        )
+    })
 
     return (
         <>
@@ -109,20 +42,23 @@ function ETFTable(props) {
         <table className="table" >
             <thead>
                 <tr>
-                    {header}
-                    <th>Edytuj</th>
+                    <th>Date</th>
+                    <th>Price [PLN]</th>
+                    <th>Count</th>
+                    <th>Unit price [{price['etf'][index]['curr']}]</th>
+                    {price['etf'][index]['curr'] != 'PLN' && <th>Exchange rate</th>}
+                    <th>Fee [PLN]</th>
+                    <th>Value [PLN]</th>
+                    <th>Edit</th>
                 </tr>
             </thead>
             <tbody>
                 {rows}
-                <tr className="no-border-td">
-                {form}
-                    <td><button onClick={addEntry} className="btn-add">+</button></td>
-                </tr>
+                <tr className="no-border-td"></tr>
             </tbody>
         </table>
         </div>
-        {showModal && <EditEntryModal data={props.data} description={description} toEditID={idToChange} updateData={updateData} setToEdit={setToEdit} closeModal={() => setModalVisibility(false)} toEdit={toEdit} /> }
+        {showModal && <EditEntryModal closeModal={() => setModalVisibility(false)} wallet={wallet} setWallet={setWallet} category={'etf'} name={index} idToChange={idToChange} /> }
         </>
     )
 }

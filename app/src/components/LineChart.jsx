@@ -5,9 +5,11 @@ function LineChart(props) {
     const options = {
         chart: {
             title: 'Value of assets in time',
+            left:0,top:0, width: "100%", height: "100%"
         },
-        width: "100%",
-        height: "100%"
+        legend: { position: 'top' },
+        tooltip: { isHtml: true }
+        
     }
 
     return (

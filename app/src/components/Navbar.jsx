@@ -8,15 +8,15 @@ function Navbar() {
         <header className="header">
             <div className="logo">
                 <img className="logo-img" src={logo} alt="Logo" />
-                <span className="logo-text"><span className="accent-text">F</span>INAN<span className="accent-text">SE</span></span> 
+                <span className="logo-text"><span className="accent-text">F</span>INAN<span className="accent-text">CES</span></span>
             </div>
             <nav className="nav">
                 <ul className="nav-list">
-                    <li className="nav-link"><NavLink to="/" className="nav-link nav-link--active">Struktura</NavLink></li>
-                    <li className="nav-link"><NavLink to="/obligacje" className="nav-link">Obligacje</NavLink></li>
-                    <li className="nav-link"><NavLink to="/etf" className="nav-link">ETFy</NavLink></li>
-                    <li className="nav-link"><NavLink to="/zloto" className="nav-link">Złoto</NavLink></li>
-                    <li className="nav-link"><NavLink to="/kryptowaluty" className="nav-link">Kryptowaluty</NavLink></li>
+                    <li className="nav-link"><NavLink to="/" className="nav-link nav-link--active">Structure</NavLink></li>
+                    <li className="nav-link"><NavLink to="/bonds" className="nav-link">Bonds</NavLink></li>
+                    <li className="nav-link"><NavLink to="/etf" className="nav-link">ETFs</NavLink></li>
+                    <li className="nav-link"><NavLink to="/commodities" className="nav-link">Commodities</NavLink></li>
+                    <li className="nav-link"><NavLink to="/crypto" className="nav-link">Cryptocurrencies</NavLink></li>
                 </ul>
             </nav>
         </header>

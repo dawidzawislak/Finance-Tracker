@@ -1,11 +1,15 @@
+import {round} from '../utils.js'
 
-function ETFSummary(props) {
-    const count = props.data.reduce((acc, entry) => acc + Number(entry.ilosc), 0)
-    const priceAll = props.data.reduce((acc, entry) => acc + Number(entry.cena) + Number(entry.prowizja), 0)
-    const avgPricePLN = Math.round(priceAll*100/count)/100
-    const avgPrice = Math.round(avgPricePLN / props.currencyRate * 100) / 100;
-    const currPrice = props.price
-    const currValue = props.currency !== 'PLN' ? Math.round(count * currPrice * props.currencyRate * 100)/100 : Math.round(count * currPrice * 100)/100
+function ETFSummary({wallet, exchangeRates, index, price}) {
+    const currency = price['etf'][index]['curr'];
+
+    const etfData = wallet.etf[index].entries
+    const count = etfData.reduce((acc, entry) => acc + Number(entry.count), 0)
+    const priceAll = etfData.reduce((acc, entry) => acc + Number(entry.price) + Number(entry.fee), 0)
+    const avgPricePLN = round(priceAll / count)
+    const avgPrice = round(etfData.reduce((acc, entry) => acc + (entry.count * entry.unitPrice), 0) / count);
+    const currPrice = price['etf'][index]['value']
+    const currValue = round(count * currPrice * exchangeRates[currency])
 
     let deltaStyle = {}
 
@@ -17,17 +21,15 @@ function ETFSummary(props) {
         deltaStyle.color = 'red';
     }
 
-    if (currPrice) props.updateVal(currValue)
-
     return (
         <div className="etf-summary">
-            <h3 className="heading-tetriary">Średnia cena za jednostke: {avgPricePLN} PLN {props.currency !== 'PLN' && <span>/ {avgPrice} {props.currency}</span>}</h3>
+            <h3 className="heading-tetriary">Avg. purchase unit price: {avgPricePLN.toLocaleString('pl-PL')} PLN {currency !== 'PLN' && <span>/ {avgPrice.toLocaleString('pl-PL')} {currency}</span>}</h3>
             <br />
-            <h3 className="heading-tetriary">Posiadana ilość: {count} jednostek</h3>
-            <h3 className="heading-tetriary">Cena: {priceAll} PLN</h3>
+            <h3 className="heading-tetriary">Quantity held: {count} units</h3>
+            <h3 className="heading-tetriary">Purchase price: {priceAll.toLocaleString('pl-PL')} PLN</h3>
             <br />
-            <h3 className="heading-tetriary">Aktualna cena za jednostke: {props.currency !== 'PLN' && <span>{Math.round(currPrice * props.currencyRate * 100) /100} PLN / </span>}{currPrice} {props.currency}</h3>
-            <h3 className="heading-tetriary">Aktualna wartość: <span style={deltaStyle}>{currValue} zł ({delta}%)</span></h3>
+            <h3 className="heading-tetriary">Current unit price: {currency !== 'PLN' && <span>{round(currPrice * exchangeRates[currency]).toLocaleString('pl-PL')} PLN / </span>}{currPrice.toLocaleString('pl-PL')} {currency}</h3>
+            <h3 className="heading-tetriary">Current value: <span style={deltaStyle}>{currValue.toLocaleString('pl-PL')} zł ({delta}%)</span></h3>
         </div>
     )
 }
