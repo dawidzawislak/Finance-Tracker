@@ -46,13 +46,16 @@ function StructurePage({wallet, price, exchangeRates, accumulatedCount, invested
     React.useEffect(() => {
         let _values = {}
         let _chartData = [["Asset", "Share"]]
+        let _firstTransaction = firstTransaction
         Object.keys(accumulatedCount).forEach((category) => {
             let value = 0;
             if (category != "bond") {
                 Object.keys(accumulatedCount[category]).forEach((name) => {
                     if (accumulatedCount[category][name].length > 0) {
-                        if (accumulatedCount[category][name][0].date < firstTransaction) {
-                            setFirstTransaction(accumulatedCount[category][name][0].date);
+                        const date1 = new Date(accumulatedCount[category][name][0].date);
+                        const date2 = new Date(_firstTransaction);
+                        if (date1 < date2) {
+                            _firstTransaction = accumulatedCount[category][name][0].date;
                         }
                         let last = accumulatedCount[category][name].at(-1);
                         value += last.count * price[category][name].value * exchangeRates[price[category][name].curr] * (name == "gold" ? 1.049 : 1);
@@ -62,8 +65,10 @@ function StructurePage({wallet, price, exchangeRates, accumulatedCount, invested
                 Object.keys(wallet[category]).forEach((name) => {
                     wallet[category][name]['entries'].forEach((bond) => {
                         value += getBondValue(bond, new Date().toISOString().split('T')[0]);
-                        if (bond.date < firstTransaction) {
-                            setFirstTransaction(bond.date);
+                        const date1 = new Date(bond.date);
+                        const date2 = new Date(_firstTransaction);
+                        if (date1 < date2) {
+                            _firstTransaction = bond.date;
                         }
                     });
                 });
@@ -71,13 +76,13 @@ function StructurePage({wallet, price, exchangeRates, accumulatedCount, invested
             _values[category] = round(value);
             _chartData.push([dictFriendlyNames[category], value]);
         });
-        setValues(_values)        
+        setValues(_values)
+        setFirstTransaction(_firstTransaction)
 
         setPieChartData(_chartData)
         getChartData(getDatesBetween(start, end, 100), wallet).then((data) => {
             if (_chartData.length > 1) {
                 let all = 0;
-                console.log(_chartData)
                 _chartData.forEach((row) => {
                     if (['Bonds', 'ETFs', 'Cryptocurrencies', 'Commodities'].includes(row[0])) {
                         data[data.length-1][getIndex(data, row[0])] = row[1]

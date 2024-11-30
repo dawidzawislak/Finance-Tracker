@@ -1,0 +1,178 @@
+{
+    "etf": {
+        "is3n": {
+            "entries": [
+                {
+                    "date": "2020-11-20",
+                    "price": 1260.29,
+                    "count": 10,
+                    "unitPrice": 28,
+                    "fee": 9.5
+                },
+                {
+                    "date": "2022-12-29",
+                    "price": 2277.87,
+                    "count": 18,
+                    "unitPrice": 26.93,
+                    "fee": 19
+                },
+                {
+                    "date": "2024-10-25",
+                    "price": 1454.14,
+                    "count": 10,
+                    "unitPrice": 33.185,
+                    "fee": 9.5
+                }
+            ]
+        },
+        "swda": {
+            "entries": [
+                {
+                    "date": "2020-12-11",
+                    "price": 1570.68,
+                    "count": 6,
+                    "unitPrice": 53.92,
+                    "fee": 9.5
+                },
+                {
+                    "date": "2024-10-06",
+                    "price": 2580.7,
+                    "count": 6,
+                    "unitPrice": 81.43,
+                    "fee": 9.5
+                }
+            ]
+        },
+        "iwda": {
+            "entries": [
+                {
+                    "date": "2022-12-29",
+                    "price": 2570.67,
+                    "count": 8,
+                    "unitPrice": 68.37,
+                    "fee": 19
+                }
+            ]
+        },
+        "vwra": {
+            "entries": [
+                {
+                    "date": "2024-05-03",
+                    "price": 4044.62,
+                    "count": 8,
+                    "unitPrice": 125.35,
+                    "fee": 14
+                },
+                {
+                    "date": "2024-10-25",
+                    "price": 3922.13,
+                    "count": 7,
+                    "unitPrice": 139.4,
+                    "fee": 14
+                }
+            ]
+        },
+        "etfbm40tr": {
+            "entries": [
+                {
+                    "date": "2021-09-20",
+                    "price": 366.1,
+                    "count": 5,
+                    "unitPrice": 73.22,
+                    "fee": 5
+                }
+            ]
+        }
+    },
+    "bond": {
+        "edo10": {
+            "entries": [
+                {
+                    "date": "2020-11-13",
+                    "price": 3000,
+                    "count": 30,
+                    "int1": 1.73,
+                    "int2": 6.9,
+                    "int3": 18.2,
+                    "int4": 9.2,
+                    "int5": 5.9,
+                    "int6": null,
+                    "int7": null,
+                    "int8": null,
+                    "int9": null,
+                    "int10": null
+                },
+                {
+                    "date": "2022-12-09",
+                    "price": 1000,
+                    "count": 10,
+                    "int1": 7.25,
+                    "int2": 7.85,
+                    "int3": 6.25,
+                    "int4": null,
+                    "int5": null,
+                    "int6": null,
+                    "int7": null,
+                    "int8": null,
+                    "int9": null,
+                    "int10": null
+                },
+                {
+                    "date": "2024-08-28",
+                    "price": 5000,
+                    "count": 50,
+                    "int1": 6.8,
+                    "int2": null,
+                    "int3": null,
+                    "int4": null,
+                    "int5": null,
+                    "int6": null,
+                    "int7": null,
+                    "int8": null,
+                    "int9": null,
+                    "int10": null
+                }
+            ]
+        }
+    },
+    "commodity": {
+        "gold": {
+            "entries": [
+                {
+                    "date": "2022-09-01",
+                    "count": 1,
+                    "unitPrice": 8426
+                },
+                {
+                    "date": "2024-11-05",
+                    "count": 2,
+                    "unitPrice": 11268
+                }
+            ]
+        }
+    },
+    "crypto": {
+        "btc": {
+            "entries": [
+                {
+                    "date": "2021-09-24",
+                    "price": 300,
+                    "count": 0.00183263,
+                    "feeBTC": 7.92e-06
+                },
+                {
+                    "date": "2022-08-31",
+                    "price": 604.34,
+                    "count": 0.00636133,
+                    "feeBTC": 2.748e-05
+                },
+                {
+                    "date": "2022-10-31",
+                    "price": 1507.2,
+                    "count": 0.01527413,
+                    "feeBTC": 6.597e-05
+                }
+            ]
+        }
+    }
+}
