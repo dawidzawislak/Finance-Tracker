@@ -6,7 +6,9 @@ import BondsPage from './BondsPage.jsx'
 import ETFPage from './ETFPage.jsx';
 import GoldPage from './GoldPage.jsx';
 import CryptoPage from './CryptoPage.jsx';
+import Loader from './components/Loader.jsx';
 import './style/App.css'
+import './style/loader.css'
 
 function App() {
   const [wallet, setWallet] = React.useState({})
@@ -80,13 +82,13 @@ function App() {
   return (
     <>
       <Navbar />
-      <Routes>
-          <Route path="/" element={initialized ? <StructurePage investedValue={investedValue} wallet={wallet} price={price} exchangeRates={exchangeRates} accumulatedCount={accumulatedCount} /> : <p>Loading...</p>} />
-          <Route path="/bonds" element={initialized ? <BondsPage wallet={wallet} setWallet={setWallet}/> : <p>Loading...</p>} />
-          <Route path="/etf" element={initialized ? <ETFPage wallet={wallet} setWallet={setWallet} exchangeRates={exchangeRates} price={price}/> : <p>Loading...</p>} />
-          <Route path="/commodities" element={initialized ? <GoldPage wallet={wallet} setWallet={setWallet} price={price}/> : <p>Loading...</p>} />
-          <Route path="/crypto" element={initialized ? <CryptoPage wallet={wallet} setWallet={setWallet} price={price}/> : <p>Loading...</p>} />
-       </Routes>
+       {initialized ? <Routes>
+          <Route path="/" element={<StructurePage investedValue={investedValue} wallet={wallet} price={price} exchangeRates={exchangeRates} accumulatedCount={accumulatedCount} />} />
+          <Route path="/bonds" element={<BondsPage wallet={wallet} setWallet={setWallet}/>} />
+          <Route path="/etf" element={<ETFPage wallet={wallet} setWallet={setWallet} exchangeRates={exchangeRates} price={price}/>} />
+          <Route path="/commodities" element={<GoldPage wallet={wallet} setWallet={setWallet} price={price}/>} />
+          <Route path="/crypto" element={<CryptoPage wallet={wallet} setWallet={setWallet} price={price}/>} />
+       </Routes> : <Loader />}
     </>
   )
 }

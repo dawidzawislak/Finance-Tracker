@@ -2,6 +2,7 @@ import React from "react"
 import PieChart from "./components/PieChart"
 import LineChart from "./components/LineChart"
 import SummaryTable from "./components/SummaryTable"
+import Loader from "./components/Loader"
 import './style/StructurePage.css'
 import {getBondValue, getDatesBetween, round, getChartData, getColumnsWithHeader, getIndex} from "./utils"
 
@@ -133,7 +134,8 @@ function StructurePage({wallet, price, exchangeRates, accumulatedCount, invested
     ));
 
     return (
-        <>
+        chartData.length > 1 && pieChartData.length > 1 ? 
+        <div>
             <aside className="currencies">
                 <p>EUR: {exchangeRates['EUR']} zł | GBP: {exchangeRates['GBP']} zł | USD: {exchangeRates['USD']} zł</p>
             </aside>
@@ -149,7 +151,7 @@ function StructurePage({wallet, price, exchangeRates, accumulatedCount, invested
                         <h3 style={{marginTop: "30px"}} className="heading-secondary-no-margin">Current value: {curr_value.toLocaleString("pl-PL")} PLN <span style={deltaStyle}>({diff} %)</span></h3>
                         <h4 className="heading-tetriary">Invested value: {inv_value.toLocaleString("pl-PL")} PLN</h4>
                     </div>
-                    {chartData.length > 1 && <div style={{width: "50%"}}>
+                    <div style={{width: "50%"}}>
                         <div className="checkboxes">
                             {checkboxes}
                         </div>
@@ -168,11 +170,12 @@ function StructurePage({wallet, price, exchangeRates, accumulatedCount, invested
                             <label>Start date: <input type="date" value={start} onChange={(ev) => setStart(ev.target.value)}></input></label>
                             <label>End date: <input type="date" value={end} onChange={(ev) => setEnd(ev.target.value)}></input></label>
                         </div>
-                    </div>}
+                    </div>
                 </div>
-                {allChartData.length > 1 && <SummaryTable allChartData={allChartData}/> }
+                <SummaryTable allChartData={allChartData}/>
             </main>
-        </>
+        </div> 
+        : <Loader />
     )
 }
 
