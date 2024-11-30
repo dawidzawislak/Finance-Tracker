@@ -27,17 +27,17 @@
   margin-bottom: 0.6rem;
 }
 
-.currencies, .free {
+.currencies {
   position: absolute;
   border-radius: 9px;
   border: 2px solid #666;
   font-size: 2.4rem;
   padding: 0.6rem 1.2rem;
   right: 5rem;
-  top: 14rem;
+  top: 15rem;
 }
 
-.etf-summary {
+.summary {
   padding: 1.6rem;
   border: 2px solid #666;
   border-radius: 9px;
@@ -47,10 +47,10 @@
 .buy-panel {
   background-color: #eee;
   border: 1px solid #bbb;
-  padding: 8px;
+  padding: 1rem;
   border-radius: 9px;
-  font-size: 20px;
-  margin-bottom: 40px;
+  font-size: 2rem;
+  margin-bottom: 3rem;
 }
 
 .buy-panel label {
@@ -64,11 +64,11 @@
 .buy-panel button {
   background-color: #e67e22;
   color: white;
-  padding: 8px 14px;
+  padding: 7px 14px;
   border: none;
   cursor: pointer;
   border-radius: 4px;
-  font-size: 16px;
+  font-size: 1.6rem;
 }
 
 .interval-btns {
@@ -85,4 +85,14 @@
   cursor: pointer;
   border-radius: 4px;
   font-size: 12px;
+}
+
+.modal-entry {
+  width: 50%;
+  margin-top: 20px;
+  display: inline-block;
+}
+
+.modal-entry input {
+  width: 70%;
 }

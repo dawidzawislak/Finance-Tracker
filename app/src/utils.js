@@ -1,5 +1,18 @@
 export const round = (num) => Math.round((num + Number.EPSILON) * 100) / 100
 
+export const getDeltaStyle  = (currValue, priceAll) => {
+    let deltaStyle = {}
+    let delta = round((currValue/priceAll - 1)*100);
+    if (currValue > priceAll) {
+        delta = '+' + delta
+        deltaStyle.color = 'green';
+    } else {
+        deltaStyle.color = 'red';
+    }
+
+    return [delta, deltaStyle];
+}
+
 export const getDatesBetween = (start, end, samples = -1) => {
     const startDate = new Date(start);
     const endDate = new Date(end);
@@ -8,17 +21,13 @@ export const getDatesBetween = (start, end, samples = -1) => {
     const timeDifference = Math.abs(endDate - startDate);
     const daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
 
-    if (daysDifference < samples) {
-        samples = daysDifference;
-    }
-
     let step = 1;
 
-    if (samples > 0) {
+    if (samples > 0 && daysDifference > samples) {
         step = Math.ceil(daysDifference / (samples-1));
     }
 
-    while (startDate <= endDate) {
+    while (startDate < endDate) {
         dates.push(new Date(startDate).toISOString().split('T')[0]); 
         startDate.setDate(startDate.getDate() + step);
     }
@@ -68,14 +77,13 @@ export const getBondValues = (wallet, timeStamps) => {
     return values;
 }
 
-export const getValues = async (asset, timeStamps, exchangeRates, wallet) => {
+export const getValues = async (asset, timeStamps, wallet, exchangeRatesCache) => {
     const values = Object.fromEntries(timeStamps.map(key => [key, [0, 0]]));
 
     await Promise.all(Object.keys(wallet[asset]).map(async (name) => {
         const price = await fetch(`http://localhost:8000/historical_data/${name}?start=${timeStamps[0]}&end=${timeStamps.at(-1)}`).then(response => response.json());
-        let exchangeRate;
-        if (price.curr != 'PLN') {
-            exchangeRate = await fetch(`http://localhost:8000/historical_data/${price.curr.toLowerCase()}pln`).then(response => response.json());
+        if (price.curr != 'PLN'&& !exchangeRatesCache[price.curr]) {
+            exchangeRatesCache[price.curr] = await fetch(`http://localhost:8000/historical_data/${price.curr.toLowerCase()}pln?start=${timeStamps[0]}&end=${timeStamps.at(-1)}`).then(response => response.json());
         }
 
         for (const time of timeStamps) {
@@ -87,40 +95,34 @@ export const getValues = async (asset, timeStamps, exchangeRates, wallet) => {
                     invested += (entry.price ? entry.price : entry.count * entry.unitPrice) + (entry.fee ? entry.fee : 0);
                 }
             });
-            values[time][0] += accCount * price.values[time] * (price.curr != 'PLN' ? exchangeRate.values[time] : 1) * (name == "gold" ? 1.049 : 1);
+            values[time][0] += accCount * price.values[time] * (price.curr != 'PLN' ? exchangeRatesCache[price.curr].values[time] : 1) * (name == "gold" ? 1.049 : 1);
             values[time][1] += invested;
         }
     }));
     
     return Object.values(values);
 };
-// TODO: fix gettimestamps [gap between 1st and 2nd]
-export const getChartData = async (timeStamps, wallet, exchangeRates, checkedItems) => {
-    console.log("OPT", checkedItems)
+
+export const getChartData = async (timeStamps, wallet) => {
     let data = [["Date"]];
     timeStamps.forEach((time) => {
         data.push([time]);
     });
-    console.log("DATA", data);
 
     const dict = {'ETFs': 'etf', 'Cryptocurrencies': 'crypto', 'Commodities': 'commodity', 'Bonds': 'bond'};
 
-    await Promise.all(['ETFs', 'Cryptocurrencies', 'Commodities', 'Bonds', 'All'].map(async (category) => {
-        let values = []
-        if (category === 'All') {
-            const etf = await getValues('etf', timeStamps, exchangeRates, wallet);
-            const crypto = await getValues('crypto', timeStamps, exchangeRates, wallet);
-            const commodity = await getValues('commodity', timeStamps, exchangeRates, wallet);
-            const bonds = getBondValues(wallet, timeStamps);
+    const exchangeRatesCache = {};
 
-            for (let i = 0; i < timeStamps.length; i++) {
-                values.push([etf[i][0] + crypto[i][0] + commodity[i][0] + bonds[i][0], etf[i][1] + crypto[i][1] + commodity[i][1] + bonds[i][1]]);
-            }
-        }
-        else if (category === 'Bonds') {
+    await Promise.all(['EUR', 'GBP', 'USD'].map(async (curr) => {
+        exchangeRatesCache[curr] = await fetch(`http://localhost:8000/historical_data/${curr.toLowerCase()}pln?start=${timeStamps[0]}&end=${timeStamps.at(-1)}`).then(response => response.json());
+    }));
+
+    await Promise.all(['ETFs', 'Cryptocurrencies', 'Commodities', 'Bonds'].map(async (category) => {
+        let values = []
+        if (category === 'Bonds') {
             values = getBondValues(wallet, timeStamps);
         } else {
-            values = await getValues(dict[category], timeStamps, exchangeRates, wallet);
+            values = await getValues(dict[category], timeStamps, wallet, exchangeRatesCache);
         }
         data = data.map((v, i) => {
             if (i == 0) {
@@ -129,6 +131,15 @@ export const getChartData = async (timeStamps, wallet, exchangeRates, checkedIte
             return [...v, values[i-1][0] ? values[i-1][0] : 0, values[i-1][1] ? values[i-1][1] : 0];
         });
     }));
+
+    data = data.map((v, i) => {
+        if (i == 0) {
+            return [...v, 'All', 'All invested'];
+        }
+        const value = v.filter((_, index) => index > 0 && index % 2 == 1).reduce((acc, curr) => acc + curr, 0);
+        const invested = v.filter((_, index) => index > 0 && index % 2 == 0).reduce((acc, curr) => acc + curr, 0);
+        return [...v, value, invested];
+    });
 
     return data;
 }
@@ -156,8 +167,6 @@ export function getColumnsWithHeader(array, columnNames) {
     
         data[0][getIndex(data, `${name} invested`)] = { role: "annotation" };
     }
-
-    console.log('DT', data)
 
     return data;
 }

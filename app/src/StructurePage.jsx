@@ -3,17 +3,19 @@ import PieChart from "./components/PieChart"
 import LineChart from "./components/LineChart"
 import SummaryTable from "./components/SummaryTable"
 import './style/StructurePage.css'
-import {getBondValue, getDatesBetween, round, getChartData, getColumnsWithHeader} from "./utils"
+import {getBondValue, getDatesBetween, round, getChartData, getColumnsWithHeader, getIndex} from "./utils"
 
 function StructurePage({wallet, price, exchangeRates, accumulatedCount, investedValue}) {
     const [values, setValues] = React.useState({})
     const [pieChartData, setPieChartData] = React.useState([])
     const [chartData, setChartData] = React.useState([])
     const options = ["ETFs", "Bonds", "Cryptocurrencies", "Commodities", "All"];
+    const dictFriendlyNames = {'etf': 'ETFs', 'crypto': 'Cryptocurrencies', 'commodity': 'Commodities', 'bond': 'Bonds'};
     const [checkedItems, setCheckedItems] = React.useState(
         options.reduce((acc, option) => ({ ...acc, [option]: (option == "All") }), {})
     );
     const [allChartData, setAllChartData] = React.useState([]);
+    const [firstTransaction, setFirstTransaction] = React.useState(new Date().toISOString().split('T')[0])
 
     const startD = new Date()
     startD.setFullYear(startD.getFullYear() - 1);
@@ -48,6 +50,9 @@ function StructurePage({wallet, price, exchangeRates, accumulatedCount, invested
             if (category != "bond") {
                 Object.keys(accumulatedCount[category]).forEach((name) => {
                     if (accumulatedCount[category][name].length > 0) {
+                        if (accumulatedCount[category][name][0].date < firstTransaction) {
+                            setFirstTransaction(accumulatedCount[category][name][0].date);
+                        }
                         let last = accumulatedCount[category][name].at(-1);
                         value += last.count * price[category][name].value * exchangeRates[price[category][name].curr] * (name == "gold" ? 1.049 : 1);
                     }
@@ -56,16 +61,31 @@ function StructurePage({wallet, price, exchangeRates, accumulatedCount, invested
                 Object.keys(wallet[category]).forEach((name) => {
                     wallet[category][name]['entries'].forEach((bond) => {
                         value += getBondValue(bond, new Date().toISOString().split('T')[0]);
+                        if (bond.date < firstTransaction) {
+                            setFirstTransaction(bond.date);
+                        }
                     });
                 });
             }
             _values[category] = round(value);
-            _chartData.push([category.toUpperCase(), value]);
+            _chartData.push([dictFriendlyNames[category], value]);
         });
         setValues(_values)        
 
         setPieChartData(_chartData)
-        getChartData(getDatesBetween(start, end, 100), wallet, exchangeRates, checkedItems).then((data) => {
+        getChartData(getDatesBetween(start, end, 100), wallet).then((data) => {
+            if (_chartData.length > 1) {
+                let all = 0;
+                console.log(_chartData)
+                _chartData.forEach((row) => {
+                    if (['Bonds', 'ETFs', 'Cryptocurrencies', 'Commodities'].includes(row[0])) {
+                        data[data.length-1][getIndex(data, row[0])] = row[1]
+                        all += row[1]
+                    }
+                })
+
+                data[data.length-1][getIndex(data, 'All')] = all
+            }
             setAllChartData(data)
             setChartData(getColumnsWithHeader(data, Object.keys(checkedItems).filter((key) => checkedItems[key])))
         })
@@ -97,7 +117,7 @@ function StructurePage({wallet, price, exchangeRates, accumulatedCount, invested
           ...prevState,
           [name]: checked,
         }));
-      };
+    };
 
     const checkboxes = options.map((option, i) => (
     <div>
@@ -113,41 +133,46 @@ function StructurePage({wallet, price, exchangeRates, accumulatedCount, invested
     ));
 
     return (
-        <main className="content">
-            <h1 className="heading-primary">Wallet structure:</h1>
-            <div className="charts">
-                <div style={{width: "50%"}}>
-                    <PieChart
-                        data={pieChartData}
-                        width={"100%"}
-                        height={"300px"}
-                    />
-                    <h3 style={{marginTop: "30px"}} className="heading-secondary-no-margin">Current value: {curr_value.toLocaleString("pl-PL")} PLN <span style={deltaStyle}>({diff} %)</span></h3>
-                    <h4 className="heading-tetriary">Invested value: {inv_value.toLocaleString("pl-PL")} PLN</h4>
-                </div>
-                <div style={{width: "50%"}}>
-                    <div className="checkboxes">
-                        {checkboxes}
+        <>
+            <aside className="currencies">
+                <p>EUR: {exchangeRates['EUR']} zł | GBP: {exchangeRates['GBP']} zł | USD: {exchangeRates['USD']} zł</p>
+            </aside>
+            <main className="content">
+                <h1 className="heading-primary">Wallet structure:</h1>
+                <div className="charts">
+                    <div style={{width: "50%"}}>
+                        <PieChart
+                            data={pieChartData}
+                            width={"100%"}
+                            height={"300px"}
+                        />
+                        <h3 style={{marginTop: "30px"}} className="heading-secondary-no-margin">Current value: {curr_value.toLocaleString("pl-PL")} PLN <span style={deltaStyle}>({diff} %)</span></h3>
+                        <h4 className="heading-tetriary">Invested value: {inv_value.toLocaleString("pl-PL")} PLN</h4>
                     </div>
-                    <LineChart
-                        data={chartData}
-                        width={"100%"}
-                        height={"300px"}
-                    />
-                    <form className="interval-btns">
-                        <button onClick={(evnt) => setStartDate('WEEK', evnt)}>WEEK</button>
-                        <button onClick={(evnt) => setStartDate('MONTH', evnt)}>MONTH</button>
-                        <button onClick={(evnt) => setStartDate('YEAR', evnt)}>YEAR</button>
-                        <button onClick={(evnt) => {evnt.preventDefault();setStart("2020-11-13")}}>MAX</button>
-                    </form>
-                    <div style={{display: "flex", justifyContent: "space-between", fontSize: "20px", marginTop: "15px", padding: "0 20px"}}>
-                        <label>Start date: <input type="date" value={start} onChange={(ev) => setStart(ev.target.value)}></input></label>
-                        <label>End date: <input type="date" value={end} onChange={(ev) => setEnd(ev.target.value)}></input></label>
-                    </div>
+                    {chartData.length > 1 && <div style={{width: "50%"}}>
+                        <div className="checkboxes">
+                            {checkboxes}
+                        </div>
+                        <LineChart
+                            data={chartData}
+                            width={"100%"}
+                            height={"300px"}
+                        />
+                        <form className="interval-btns">
+                            <button onClick={(evnt) => setStartDate('WEEK', evnt)}>WEEK</button>
+                            <button onClick={(evnt) => setStartDate('MONTH', evnt)}>MONTH</button>
+                            <button onClick={(evnt) => setStartDate('YEAR', evnt)}>YEAR</button>
+                            <button onClick={(evnt) => {evnt.preventDefault();setStart(firstTransaction)}}>MAX</button>
+                        </form>
+                        <div style={{display: "flex", justifyContent: "space-between", fontSize: "20px", marginTop: "15px", padding: "0 20px"}}>
+                            <label>Start date: <input type="date" value={start} onChange={(ev) => setStart(ev.target.value)}></input></label>
+                            <label>End date: <input type="date" value={end} onChange={(ev) => setEnd(ev.target.value)}></input></label>
+                        </div>
+                    </div>}
                 </div>
-            </div>
-            {allChartData && <SummaryTable allChartData={allChartData}/>}
-        </main>
+                {allChartData.length > 1 && <SummaryTable allChartData={allChartData}/> }
+            </main>
+        </>
     )
 }
 

@@ -1,4 +1,4 @@
-import {round} from '../utils.js'
+import {round, getDeltaStyle} from '../utils.js'
 
 function ETFSummary({wallet, exchangeRates, index, price}) {
     const currency = price['etf'][index]['curr'];
@@ -11,18 +11,10 @@ function ETFSummary({wallet, exchangeRates, index, price}) {
     const currPrice = price['etf'][index]['value']
     const currValue = round(count * currPrice * exchangeRates[currency])
 
-    let deltaStyle = {}
-
-    let delta = Math.round((currValue/priceAll - 1)*10000)/100;
-    if (currValue > priceAll) {
-        delta = '+' + delta
-        deltaStyle.color = 'green';
-    } else {
-        deltaStyle.color = 'red';
-    }
+    let [delta, deltaStyle] = getDeltaStyle(currValue, priceAll);
 
     return (
-        <div className="etf-summary">
+        <div className="summary">
             <h3 className="heading-tetriary">Avg. purchase unit price: {avgPricePLN.toLocaleString('pl-PL')} PLN {currency !== 'PLN' && <span>/ {avgPrice.toLocaleString('pl-PL')} {currency}</span>}</h3>
             <br />
             <h3 className="heading-tetriary">Quantity held: {count} units</h3>

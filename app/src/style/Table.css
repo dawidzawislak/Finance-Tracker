@@ -31,17 +31,17 @@
 }
 
 dialog {
-    width: 50%;
-    padding: 18px;
-    position: fixed;
-    top: 10%;
-    height: 80vh;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    left: 25%;
-    font-size: 20px;
-    border-radius: 20px;
-    -ms-overflow-style: none;
+  width: 70%;
+  padding: 18px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow-x: hidden;
+  overflow-y: scroll;
+  font-size: 20px;
+  border-radius: 20px;
+  -ms-overflow-style: none;
   scrollbar-width: none;
 }
 
@@ -50,86 +50,21 @@ dialog::-webkit-scrollbar {
 }
 
 dialog::backdrop {
-  background-color: rgba(0,0,0,0.5);
-}
-
-
-.table-footer {
-    display: flex;
-    justify-content: space-between;
-}
-
-.add-new, .summary, .form {
-    margin-left: -2px;
-    display: inline-block;
-    border: 3px solid #666;
-    border-bottom-right-radius: 9px;
-    border-bottom-left-radius: 9px;
-    overflow: hidden;
-    padding: 5px;
-}
-.summary {
-    font-size: 1.8rem;
-    font-weight: 500;
-    padding: 0.5rem 2rem;
-    background-color: #e67e22;
+  background-color: rgba(0,0,0,0.7);
 }
 
 input[type="number"], input[type="date"], select {
-    border-radius: 6px;
-    border: 1px solid #666;
-    font-size: 1.8rem;
-    font-family: inherit;
-    padding: 0.2rem 0.5rem;
-    margin-right: 1.1rem;
-    width: 125px;
-  }
-  
-  input[type="date"] {
-    text-align: right;
-  }
-
-  .date--obligacje, .date--krypto {
-    width: 12.2rem;
-  }
-.count--obligacje {
-    width: 5rem;
-    text-align: center;
+  border-radius: 6px;
+  border: 1px solid #666;
+  font-size: 1.8rem;
+  font-family: inherit;
+  padding: 0.2rem 0.5rem;
+  margin-right: 1.1rem;
+  width: 125px;
 }
 
-.price--krypto {
-  width: 10.5rem;
-  text-align: center;
-}
-
-.countpro--krypto {
-  width: 18.4rem;
-  text-align: center;
-}
-
-.pro--krypto {
-  width: 13.4rem;
-  text-align: center;
-}
-
-.btn-add {
-    width: 3rem;
-    height: 3rem;
-    background-color: #e67e22;
-    font-weight: 500;
-    font-size: 2.4rem;
-    border: none;
-    border-radius: 100px;
-    margin-left: 1rem;
-    cursor: pointer;
-  }
-
-  .btn-add:hover {
-    background-color: #ce701e;
-  }
-
-#modal {
-  position: relative;
+input[type="date"] {
+  text-align: right;
 }
 
 .controls {
@@ -178,32 +113,9 @@ input[type="number"], input[type="date"], select {
     -moz-appearance: textfield;
   }
 
-  td .input-fill, td .input-fill-short, td .input-fill-short-last  {
-    width: 80%;
-    margin: 0 auto;
-    text-align: center;
-  }
-  td .input-fill-short {
-    width: 60%;
-  }
-  td .input-fill-short-last {
-    width: 50%;
-    margin-left: 2rem;
-  }
   .no-border-td  {
     background-color: #fdf2e9 !important;
   }
   .no-border-td td {
     border: none !important;
-  }
-  
-  .btn-add {
-    width: 3rem;
-    height: 3rem;
-    background-color: #e67e22;
-    font-weight: 500;
-    font-size: 2.4rem;
-    border: none;
-    border-radius: 100px;
-    margin-left: 1rem;
   }

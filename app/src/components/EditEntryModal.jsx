@@ -23,19 +23,8 @@ const PROPS_NAMES = {
     'fee': 'Fee'
 }
 
-function replaceNulls(obj) {
-    for (let key in obj) {
-        if (obj[key] === null) {
-            obj[key] = '';
-        } else if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
-            replaceNulls(obj[key]);
-        }
-    }
-    return obj;
-}
-
 function EditEntryModal({ closeModal, wallet, category, name, idToChange, setWallet }) {
-    const [toEdit, setToEdit] = React.useState(replaceNulls(wallet[category][name].entries[idToChange]))
+    const [toEdit, setToEdit] = React.useState(wallet[category][name].entries[idToChange])
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -51,7 +40,7 @@ function EditEntryModal({ closeModal, wallet, category, name, idToChange, setWal
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ _wallet })
+            body: JSON.stringify(_wallet)
         }).then(response => {
             if (response.ok) {
                 alert('Updated successfully')
@@ -64,7 +53,7 @@ function EditEntryModal({ closeModal, wallet, category, name, idToChange, setWal
     function handleInput(event) {
         setToEdit(prev => ({
             ...prev,
-            [event.target.name]: (event.target.name == 'date' ? event.target.value : Number(event.target.value))
+            [event.target.name]: (event.target.name == 'date' ? event.target.value : (event.target.value == '' ? null : Number(event.target.value)))
         }))
         if (category == 'bond' && event.target.name === "count") {
             setToEdit(prev => ({
@@ -97,7 +86,7 @@ function EditEntryModal({ closeModal, wallet, category, name, idToChange, setWal
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ _wallet })
+            body: JSON.stringify(_wallet)
         }).then(response => {
             if (response.ok) {
                 alert('Deleted successfully')
@@ -112,17 +101,18 @@ function EditEntryModal({ closeModal, wallet, category, name, idToChange, setWal
     const inputs = Object.keys(toEdit).filter(key => key in PROPS_NAMES).map((key, i) => {
         if (key == 'price' && category == 'bond') return;
         return (
-            <label>
-                {PROPS_NAMES[key]}: <br></br>
-                <input type={key == 'date' ? 'date' : 'number'} name={key} value={toEdit[key]} onChange={handleInput}></input><br></br>
-            </label>
+            <div className="modal-entry">
+                <label>
+                    {PROPS_NAMES[key]}: <br></br>
+                    <input type={key == 'date' ? 'date' : 'number'} name={key} value={toEdit[key] != null ? toEdit[key] : ''} onChange={handleInput}></input><br></br>
+                </label>
+            </div>
         )
     })
 
     return (
         <dialog id="modal">
             <form>
-                {inputs}
                 <div className="controls">
                     <button onClick={handleDelete} className="modal-btn modal-btn-bin">
                         <img src={binIcon} alt="binIcon" width={18} />
@@ -134,6 +124,7 @@ function EditEntryModal({ closeModal, wallet, category, name, idToChange, setWal
                         <img src={tickIcon} alt="tickIcon" width={18} />
                     </button>
                 </div>
+                {inputs}
             </form>
         </dialog>
     )

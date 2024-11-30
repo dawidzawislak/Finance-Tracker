@@ -5,10 +5,6 @@
     margin-bottom: 25px;
 }
 
-.tt {
-    padding: 10px;;
-}
-
 .checkboxes {
     display: flex;
     justify-content: space-between;

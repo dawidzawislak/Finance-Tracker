@@ -36,7 +36,7 @@ function BuyETFs({wallet, setWallet}) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({_wallet})
+            body: JSON.stringify(_wallet)
         }).then(response => {
             if (response.ok) {
                 alert('Bought successfully')

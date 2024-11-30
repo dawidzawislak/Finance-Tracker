@@ -19,7 +19,6 @@ stooq_mapping = {
     'is3n': 'is3n.de',
     'etfbm40tr': 'etfbm40tr.pl',
 
-
     'btc': 'btcpln',
     'gold': 'xaupln',
 
@@ -192,16 +191,16 @@ def download_instrument_data(instrument: str):
 @app.route('/change_wallet', methods=['POST'])
 def change_wallet():
     data = request.get_json()
-    
-    #print(data['bond']['edo10'])
-    print(data)
+
+    with open('wallet.json', 'w') as f:
+        f.write(json.dumps(data, indent=4))
 
     return {"message": "Data received", "data": data}, 200
 
 def main():
     for ins in stooq_mapping.keys():
         if (not os.path.exists(f"historical/{ins}.json") or 
-            datetime.datetime.fromtimestamp(os.path.getmtime(f"historical/{ins}.json")) + datetime.timedelta(days=0.5) < datetime.datetime.now()):
+            datetime.datetime.fromtimestamp(os.path.getmtime(f"historical/{ins}.json")).day != datetime.datetime.now().day):
             download_instrument_data(ins)
         
     app.run(host='127.0.0.1', port=8000)

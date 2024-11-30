@@ -1,5 +1,5 @@
 import React from "react"
-import {round} from "../utils.js"
+import {round, getDeltaStyle} from "../utils.js"
 
 function CryptoSummary({wallet, price}) {
     const btcPrice = price['crypto']['btc']['value']
@@ -8,21 +8,12 @@ function CryptoSummary({wallet, price}) {
     const count = btcData.reduce((acc, entry) => acc + Number(entry.count), 0)
     const priceAll = btcData.reduce((acc, entry) => acc + Number(entry.price), 0)
     const avgPrice = round(priceAll/count)
-
     const currValue = round(count * btcPrice)
 
-    let deltaStyle = {}
-
-    let delta = Math.round((currValue/priceAll - 1)*10000)/100;
-    if (currValue > priceAll) {
-        delta = '+' + delta
-        deltaStyle.color = 'green';
-    } else {
-        deltaStyle.color = 'red';
-    }
+    let [delta, deltaStyle] = getDeltaStyle(currValue, priceAll);
 
     return (
-        <div className="etf-summary">
+        <div className="summary">
             <h3 className="heading-tetriary">Avg purchase BTC price: {round(avgPrice).toLocaleString('pl-PL')} PLN</h3>
             <br />
             <h3 className="heading-tetriary">Quantity held: {count} BTC</h3>

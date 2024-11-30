@@ -26,7 +26,7 @@ function BuyGold({wallet, setWallet}) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({_wallet})
+            body: JSON.stringify(_wallet)
         }).then(response => {
             if (response.ok) {
                 alert('Bought successfully')
@@ -48,7 +48,7 @@ function BuyGold({wallet, setWallet}) {
 
     return (
         <div className='buy-panel'>
-            <h1 className="heading-secondary">Buy:</h1>
+            <h1 className="heading-secondary">Buy gold:</h1>
             <div>
                 <label>
                     Date:

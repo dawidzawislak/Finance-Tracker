@@ -10,8 +10,6 @@ function ETFTable({index, exchangeRates, wallet, setWallet, price}) {
 
     const etfData = wallet['etf'][index]['entries']
 
-    console.log(etfData)
-
     function handleClick(key) {
         setModalVisibility(true)
         setIdToChange(key)
