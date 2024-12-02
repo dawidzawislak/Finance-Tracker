@@ -1,4 +1,3 @@
-import React from "react"
 import { round, getDeltaStyle } from "../utils.js"
 
 function CryptoSummary({ wallet, price }) {

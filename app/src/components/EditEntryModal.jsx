@@ -101,7 +101,7 @@ function EditEntryModal({ closeModal, wallet, category, name, idToChange, setWal
     const inputs = Object.keys(toEdit).filter(key => key in PROPS_NAMES).map((key, i) => {
         if (key == 'price' && category == 'bond') return;
         return (
-            <div className="modal-entry">
+            <div className="modal-entry" key={i}>
                 <label>
                     {PROPS_NAMES[key]}: <br></br>
                     <input type={key == 'date' ? 'date' : 'number'} name={key} value={toEdit[key] != null ? toEdit[key] : ''} onChange={handleInput}></input><br></br>

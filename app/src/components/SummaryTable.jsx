@@ -1,4 +1,3 @@
-import { React } from 'react';
 import { round, getIndex } from '../utils'
 
 function SummaryTable({ allChartData }) {

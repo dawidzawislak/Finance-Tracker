@@ -1,7 +1,6 @@
 import CryptoTable from './components/CryptoTable.jsx'
 import CryptoSummary from './components/CryptoSummary.jsx'
 import BuyCrypto from './components/BuyCrypto.jsx'
-import React from 'react'
 
 function CryptoPage({ wallet, setWallet, price }) {
     return (

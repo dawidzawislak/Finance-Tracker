@@ -126,13 +126,12 @@ function StructurePage({ wallet, price, exchangeRates, accumulatedCount, investe
     };
 
     const checkboxes = options.map((option, i) => (
-        <div>
+        <div key={i}>
             <input
                 type="checkbox"
                 name={option}
                 checked={checkedItems[option]}
                 onChange={handleCheckboxChange}
-                key={i}
             />
             <label>{option}</label>
         </div>

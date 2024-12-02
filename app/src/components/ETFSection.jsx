@@ -1,6 +1,5 @@
 import ETFSummary from "./ETFSummary.jsx"
 import ETFTable from './ETFTable.jsx'
-import React from "react"
 
 function ETFSection({ wallet, setWallet, exchangeRates, index, price }) {
     return (

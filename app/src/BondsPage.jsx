@@ -1,4 +1,3 @@
-import React from 'react'
 import TableBonds from './components/TableBonds.jsx'
 import BuyBonds from './components/BuyBonds.jsx'
 

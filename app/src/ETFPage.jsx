@@ -1,4 +1,3 @@
-import React from 'react'
 import ETFSection from './components/ETFSection.jsx'
 import BuyETFs from './components/BuyETFs.jsx'
 
