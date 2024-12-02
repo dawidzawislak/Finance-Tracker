@@ -14,12 +14,12 @@ function GoldSummary({wallet, price}) {
 
     return (
         <div className="summary">
-            <h3 className="heading-tetriary">Avg. purchase price/1oz.: {avgPrice} PLN </h3>
+            <h3 className="heading-tetriary">Avg. purchase price/1oz.: {avgPrice.toLocaleString("pl-PL")} PLN </h3>
             <br />
             <h3 className="heading-tetriary">Quantity held: {mass} oz.</h3>
-            <h3 className="heading-tetriary">Price: {priceAll} PLN</h3>
+            <h3 className="heading-tetriary">Price: {priceAll.toLocaleString("pl-PL")} PLN</h3>
             <br />
-            <h3 className="heading-tetriary">Current price/1oz:  {currPrice} PLN</h3>
+            <h3 className="heading-tetriary">Current price / 1oz.:  {currPrice.toLocaleString("pl-PL")} PLN</h3>
             <h3 className="heading-tetriary">Current value: <span style={deltaStyle}>{currValue.toLocaleString('pl-PL')} zł ({delta}%)</span></h3>
         </div>
     )

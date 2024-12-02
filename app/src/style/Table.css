@@ -1,38 +1,43 @@
-.table {
+table {
     width: 100%;
     font-size: 1.8rem;
     border-collapse: collapse;
     border-radius: 9px;
     border-style: hidden;
-    box-shadow: 0 0 0 2px #666;
+    -webkit-box-shadow: 6px 6px 20px 0px rgba(66, 68, 90, 0.75);
+    -moz-box-shadow: 6px 6px 20px 0px rgba(66, 68, 90, 0.75);
+    box-shadow: 6px 6px 20px 0px rgba(66, 68, 90, 0.75);
     overflow: hidden;
-}
-.table--not-round {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
+    transition: all 0.3s;
 }
 
-.table th {
+table:hover {
+  -webkit-box-shadow: 6px 6px 24px 0px rgba(66, 68, 90, 1);
+  -moz-box-shadow: 6px 6px 24px 0px rgba(66, 68, 90, 1);
+  box-shadow: 6px 6px 24px 0px rgba(66, 68, 90, 1);
+  transition: all 0.3s;
+}
+
+table th {
     background-color: #e67e22;
 }
 
-.table tr {
-    border: 2px solid #666;
+table tr:nth-child(odd) {
+    background-color: #eee;
 }
 
-.table tr:nth-child(odd) {
-    background-color: #e8e8e8;
+table tr:hover {
+  background-color: #fdf2e9 !important;
 }
 
-.table th, .table td {
+table th, .table td {
     padding: 0.5rem;
     text-align: center;
-    border-left: 1px solid #000;
 }
 
-dialog {
+#modal {
   width: 70%;
-  padding: 18px;
+  padding: 2.2rem 1.6rem;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -41,15 +46,15 @@ dialog {
   overflow-y: scroll;
   font-size: 20px;
   border-radius: 20px;
-  -ms-overflow-style: none;
   scrollbar-width: none;
+  border: 1px solid #666;
 }
 
-dialog::-webkit-scrollbar {
+#modal::-webkit-scrollbar {
   display: none;
 }
 
-dialog::backdrop {
+#modal::backdrop {
   background-color: rgba(0,0,0,0.7);
 }
 
@@ -111,11 +116,4 @@ input[type="date"] {
   
   input[type=number] {
     -moz-appearance: textfield;
-  }
-
-  .no-border-td  {
-    background-color: #fdf2e9 !important;
-  }
-  .no-border-td td {
-    border: none !important;
   }

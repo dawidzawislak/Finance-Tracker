@@ -63,7 +63,7 @@ function BuyBonds({wallet, setWallet}) {
     return (
         <div className='buy-panel'>
             <h1 className="heading-secondary">Buy:</h1>
-            <div>
+            <div className='buy-panel-row'>
                 <label>
                     Bond:
                     <select name='type' value={params['type']} onChange={handleChange}>

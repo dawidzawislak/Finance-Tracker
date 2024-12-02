@@ -56,6 +56,7 @@ function SummaryTable({allChartData}) {
     });
 
     return (
+        <div className="summary-table-container">
         <table className='summary-table'>
             <thead>
                 <tr>
@@ -83,6 +84,7 @@ function SummaryTable({allChartData}) {
                 {trs}
             </tbody>
         </table>
+        </div>
     )
 }
 

@@ -49,7 +49,7 @@ function BuyCrypto({wallet, setWallet}) {
     return (
         <div className='buy-panel'>
             <h1 className="heading-secondary">Buy BTC:</h1>
-            <div>
+            <div className='buy-panel-row'>
                 <label>
                     Date:
                     <input type='date' name='date' value={params['date']} onChange={handleChange}/>

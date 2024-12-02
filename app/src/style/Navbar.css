@@ -1,7 +1,15 @@
   
 .header {
-background-color: #fdf2e9;
-display: flex;
+    background-color: #fdf2e9;
+    display: flex;
+    -webkit-box-shadow: 0px 0px 16px 0px rgba(66, 68, 90, 0.5);
+    -moz-box-shadow: 0px 0px 16px 0px rgba(66, 68, 90, 0.5);
+    box-shadow: 0px 0px 16px 0px rgba(66, 68, 90, 0.5);
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    height: 110px;
 }
 
 .logo {

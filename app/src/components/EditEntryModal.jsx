@@ -115,13 +115,13 @@ function EditEntryModal({ closeModal, wallet, category, name, idToChange, setWal
             <form>
                 <div className="controls">
                     <button onClick={handleDelete} className="modal-btn modal-btn-bin">
-                        <img src={binIcon} alt="binIcon" width={18} />
+                        <img src={binIcon} alt="binIcon" width={18}/>
                     </button>
                     <button onClick={closeModal} className="modal-btn modal-btn-cross">
-                        <img src={crossIcon} alt="crossIcon" width={18} />
+                        <img src={crossIcon} alt="crossIcon" width={18}/>
                     </button>
                     <button onClick={handleSubmit} className="modal-btn modal-btn-tick">
-                        <img src={tickIcon} alt="tickIcon" width={18} />
+                        <img src={tickIcon} alt="tickIcon" width={18}/>
                     </button>
                 </div>
                 {inputs}

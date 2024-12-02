@@ -52,7 +52,6 @@ function ETFTable({index, exchangeRates, wallet, setWallet, price}) {
             </thead>
             <tbody>
                 {rows}
-                <tr className="no-border-td"></tr>
             </tbody>
         </table>
         </div>

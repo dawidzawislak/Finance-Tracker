@@ -79,7 +79,7 @@ function StructurePage({wallet, price, exchangeRates, accumulatedCount, invested
         setValues(_values)
         setFirstTransaction(_firstTransaction)
 
-        setPieChartData(_chartData)
+        setPieChartData(_chartData.map((row) => [`${row[0]}\n${round(row[1]).toLocaleString('pl-PL')} PLN`, row[1]]))
         getChartData(getDatesBetween(start, end, 100), wallet).then((data) => {
             if (_chartData.length > 1) {
                 let all = 0;
@@ -140,9 +140,13 @@ function StructurePage({wallet, price, exchangeRates, accumulatedCount, invested
 
     return (
         chartData.length > 1 && pieChartData.length > 1 ? 
-        <div>
+        <div className="container">
             <aside className="currencies">
-                <p>EUR: {exchangeRates['EUR']} zł | GBP: {exchangeRates['GBP']} zł | USD: {exchangeRates['USD']} zł</p>
+                <div className="flex">
+                    <div>EURPLN: {exchangeRates['EUR'].toLocaleString('pl-PL')}</div>
+                    <div>GBPPLN: {exchangeRates['GBP'].toLocaleString('pl-PL')}</div>
+                    <div>USDPLN: {exchangeRates['USD'].toLocaleString('pl-PL')}</div>
+                </div>
             </aside>
             <main className="content">
                 <h1 className="heading-primary">Wallet structure:</h1>

@@ -5,6 +5,7 @@
 
 .content {
   padding: 2rem 5rem;
+  margin-top: 110px;
 }
   
 .heading-primary {
@@ -28,29 +29,42 @@
 }
 
 .currencies {
+  width: 30%;
   position: absolute;
   border-radius: 9px;
-  border: 2px solid #666;
   font-size: 2.4rem;
   padding: 0.6rem 1.2rem;
   right: 5rem;
   top: 15rem;
+  -webkit-box-shadow: 3px 3px 10px 0px rgba(66, 68, 90, 0.6);
+  -moz-box-shadow: 3px 3px 10px 0px rgba(66, 68, 90, 0.6);
+  box-shadow: 3px 3px 10px 0px rgba(66, 68, 90, 0.6);
 }
 
 .summary {
   padding: 1.6rem;
-  border: 2px solid #666;
   border-radius: 9px;
   width: 35%;
+  -webkit-box-shadow: 4px 4px 16px 0px rgba(66, 68, 90, 0.75);
+  -moz-box-shadow: 4px 4px 16px 0px rgba(66, 68, 90, 0.75);
+  box-shadow: 4px 4px 16px 0px rgba(66, 68, 90, 0.75);
 }
 
 .buy-panel {
   background-color: #eee;
-  border: 1px solid #bbb;
   padding: 1rem;
   border-radius: 9px;
   font-size: 2rem;
   margin-bottom: 3rem;
+  -webkit-box-shadow: 3px 3px 16px 0px rgba(66, 68, 90, 0.75);
+  -moz-box-shadow: 3px 3px 16px 0px rgba(66, 68, 90, 0.75);
+  box-shadow: 3px 3px 16px 0px rgba(66, 68, 90, 0.75);
+}
+
+.buy-panel-row {
+  display: flex;
+  align-content: center;
+  margin-bottom: 10px;
 }
 
 .buy-panel label {
@@ -61,7 +75,7 @@
   margin-left: 10px;
 }
 
-.buy-panel button {
+.buy-panel button, .interval-btns button {
   background-color: #e67e22;
   color: white;
   padding: 7px 14px;
@@ -78,13 +92,12 @@
 }
 
 .interval-btns button {
-  background-color: #e67e22;
-  color: white;
   padding: 6px 10px;
-  border: none;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 12px;
+  font-size: 1.2rem;
+}
+
+.interval-btns button:hover, .buy-panel button:hover {
+  background-color: #cf711f;
 }
 
 .modal-entry {

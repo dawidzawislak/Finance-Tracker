@@ -35,7 +35,7 @@ function GoldTable({wallet, setWallet}) {
                     <th>Date</th>
                     <th>Price [PLN]</th>
                     <th>Count [oz.]</th>
-                    <th>Price/oz.</th>
+                    <th>Price / oz. [PLN]</th>
                     <th>Edytuj</th>
                 </tr>
             </thead>
