@@ -1,8 +1,9 @@
 import React from 'react'
 
-function BuyETFs({wallet, setWallet}) {
+function BuyETFs({ wallet, setWallet }) {
     const [available, setAvailable] = React.useState([])
-    const [params, setParams] = React.useState({'index': '', 'date': '', 'count': '', 'price': '', 
+    const [params, setParams] = React.useState({
+        'index': '', 'date': '', 'count': '', 'price': '',
         'unitPrice': '', 'fee': ''
     })
 
@@ -20,11 +21,11 @@ function BuyETFs({wallet, setWallet}) {
             return
         }
 
-        const _wallet = {...wallet}
+        const _wallet = { ...wallet }
         _wallet['etf'][params['index']]['entries'].push({
             'date': params['date'],
             'price': Number(params['price']),
-            'count': Number(params['count']), 
+            'count': Number(params['count']),
             'unitPrice': Number(params['unitPrice']),
             'fee': Number(params['fee'])
         })
@@ -40,7 +41,7 @@ function BuyETFs({wallet, setWallet}) {
         }).then(response => {
             if (response.ok) {
                 alert('Bought successfully')
-                setParams({'index': '', 'date': '', 'count': '', 'price': '', 'unitPrice': '', 'fee': ''})
+                setParams({ 'index': '', 'date': '', 'count': '', 'price': '', 'unitPrice': '', 'fee': '' })
             } else {
                 alert('Failed to buy')
             }
@@ -69,23 +70,23 @@ function BuyETFs({wallet, setWallet}) {
                 </label>
                 <label>
                     Date:
-                    <input type='date' name='date' value={params['date']} onChange={handleChange}/>
+                    <input type='date' name='date' value={params['date']} onChange={handleChange} />
                 </label>
                 <label>
                     Price:
-                    <input type='number' name='price' value={params['price']} onChange={handleChange}/>
+                    <input type='number' name='price' value={params['price']} onChange={handleChange} />
                 </label>
                 <label>
                     Count:
-                    <input type='number' name='count' value={params['count']} onChange={handleChange}/>
+                    <input type='number' name='count' value={params['count']} onChange={handleChange} />
                 </label>
                 <label>
                     Unit price:
-                    <input type='number' name='unitPrice' value={params['unitPrice']} onChange={handleChange}/>
+                    <input type='number' name='unitPrice' value={params['unitPrice']} onChange={handleChange} />
                 </label>
                 <label>
                     Fee:
-                    <input type='number' name='fee' value={params['fee']} onChange={handleChange}/>
+                    <input type='number' name='fee' value={params['fee']} onChange={handleChange} />
                 </label>
                 <button onClick={handleBuy}>Buy</button>
             </div>

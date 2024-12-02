@@ -7,7 +7,7 @@
   padding: 2rem 5rem;
   margin-top: 110px;
 }
-  
+
 .heading-primary {
   font-size: 5rem;
   margin-bottom: 2rem;
@@ -71,11 +71,13 @@
   margin-right: 30px;
 }
 
-.buy-panel input, .buy-panel select {
+.buy-panel input,
+.buy-panel select {
   margin-left: 10px;
 }
 
-.buy-panel button, .interval-btns button {
+.buy-panel button,
+.interval-btns button {
   background-color: #e67e22;
   color: white;
   padding: 7px 14px;
@@ -96,7 +98,8 @@
   font-size: 1.2rem;
 }
 
-.interval-btns button:hover, .buy-panel button:hover {
+.interval-btns button:hover,
+.buy-panel button:hover {
   background-color: #cf711f;
 }
 

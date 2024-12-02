@@ -1,13 +1,13 @@
 import React from "react"
-import {round, getDeltaStyle} from "../utils.js"
+import { round, getDeltaStyle } from "../utils.js"
 
-function CryptoSummary({wallet, price}) {
+function CryptoSummary({ wallet, price }) {
     const btcPrice = price['crypto']['btc']['value']
 
     const btcData = wallet.crypto.btc['entries'];
     const count = btcData.reduce((acc, entry) => acc + Number(entry.count), 0)
     const priceAll = btcData.reduce((acc, entry) => acc + Number(entry.price), 0)
-    const avgPrice = round(priceAll/count)
+    const avgPrice = round(priceAll / count)
     const currValue = round(count * btcPrice)
 
     let [delta, deltaStyle] = getDeltaStyle(currValue, priceAll);

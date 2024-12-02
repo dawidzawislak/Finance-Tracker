@@ -21,16 +21,16 @@ function App() {
   React.useEffect(() => {
     const make_fetch = async () => {
       let _wallet = await fetch('http://localhost:8000/wallet').then(response => response.json())
-      
+
       let _exchangeRates = await fetch('http://localhost:8000/exchange_rates').then(response => response.json())
-      
+
       let _price = {}
 
       for (const category of Object.keys(_wallet)) {
         if (!_price[category]) {
           _price[category] = {};
         }
-    
+
         for (const name of Object.keys(_wallet[category])) {
           if (category !== "bond") {
             _price[category][name] = await fetch(`http://localhost:8000/value/${name}`).then(response => response.json());
@@ -56,7 +56,7 @@ function App() {
         _accumulatedCount[category] = {};
         _investedValue[category] = 0;
       }
-  
+
       for (const name of Object.keys(wallet[category])) {
         if (category !== "bond") {
           if (!_accumulatedCount[category][name]) {
@@ -82,13 +82,13 @@ function App() {
   return (
     <>
       <Navbar />
-       {initialized ? <Routes>
-          <Route path="/" element={<StructurePage investedValue={investedValue} wallet={wallet} price={price} exchangeRates={exchangeRates} accumulatedCount={accumulatedCount} />} />
-          <Route path="/bonds" element={<BondsPage wallet={wallet} setWallet={setWallet}/>} />
-          <Route path="/etf" element={<ETFPage wallet={wallet} setWallet={setWallet} exchangeRates={exchangeRates} price={price}/>} />
-          <Route path="/commodities" element={<GoldPage wallet={wallet} setWallet={setWallet} price={price}/>} />
-          <Route path="/crypto" element={<CryptoPage wallet={wallet} setWallet={setWallet} price={price}/>} />
-       </Routes> : <Loader />}
+      {initialized ? <Routes>
+        <Route path="/" element={<StructurePage investedValue={investedValue} wallet={wallet} price={price} exchangeRates={exchangeRates} accumulatedCount={accumulatedCount} />} />
+        <Route path="/bonds" element={<BondsPage wallet={wallet} setWallet={setWallet} />} />
+        <Route path="/etf" element={<ETFPage wallet={wallet} setWallet={setWallet} exchangeRates={exchangeRates} price={price} />} />
+        <Route path="/commodities" element={<GoldPage wallet={wallet} setWallet={setWallet} price={price} />} />
+        <Route path="/crypto" element={<CryptoPage wallet={wallet} setWallet={setWallet} price={price} />} />
+      </Routes> : <Loader />}
     </>
   )
 }

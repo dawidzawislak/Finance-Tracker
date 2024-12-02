@@ -1,8 +1,8 @@
 import React from 'react'
 
-function BuyBonds({wallet, setWallet}) {
+function BuyBonds({ wallet, setWallet }) {
     const [avaiable, setAvailable] = React.useState([])
-    const [params, setParams] = React.useState({'type': '', 'date': '', 'count': '', 'interest': ''})
+    const [params, setParams] = React.useState({ 'type': '', 'date': '', 'count': '', 'interest': '' })
 
     React.useEffect(() => {
         fetch('http://localhost:8000/available/bond').then(response => response.json()).then(bonds => {
@@ -21,14 +21,14 @@ function BuyBonds({wallet, setWallet}) {
         let rates = {}
         const match = params['type'].match(/\d+$/);
         for (let i = 2; i <= parseInt(match[0], 10); i++) {
-            rates['int'+i] = null
+            rates['int' + i] = null
         }
 
-        const _wallet = {...wallet}
+        const _wallet = { ...wallet }
         _wallet['bond'][params['type']]['entries'].push({
             'date': params['date'],
-            'price': Number(params['count'])*100,
-            'count': Number(params['count']), 
+            'price': Number(params['count']) * 100,
+            'count': Number(params['count']),
             'int1': Number(params['interest']),
             ...rates
         })
@@ -44,7 +44,7 @@ function BuyBonds({wallet, setWallet}) {
         }).then(response => {
             if (response.ok) {
                 alert('Bought successfully')
-                setParams({'type': '', 'date': '', 'count': '', 'interest': ''})
+                setParams({ 'type': '', 'date': '', 'count': '', 'interest': '' })
             } else {
                 alert('Failed to buy')
             }
@@ -73,15 +73,15 @@ function BuyBonds({wallet, setWallet}) {
                 </label>
                 <label>
                     Date:
-                    <input type='date' name='date' value={params['date']} onChange={handleChange}/>
+                    <input type='date' name='date' value={params['date']} onChange={handleChange} />
                 </label>
                 <label>
                     Count:
-                    <input type='number'name='count' value={params['count']} onChange={handleChange}/>
+                    <input type='number' name='count' value={params['count']} onChange={handleChange} />
                 </label>
                 <label>
                     Interest rate:
-                    <input type='number'name='interest' value={params['interest']} onChange={handleChange}/>
+                    <input type='number' name='interest' value={params['interest']} onChange={handleChange} />
                 </label>
                 <button onClick={handleBuy}>Buy</button>
             </div>

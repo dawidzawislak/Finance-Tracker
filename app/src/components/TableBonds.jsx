@@ -2,9 +2,9 @@ import React from "react"
 import EditEntryModal from "./EditEntryModal.jsx"
 import '../style/Table.css'
 import editIcon from '../assets/edit-icon.png'
-import {getBondValue} from "../utils"
+import { getBondValue } from "../utils"
 
-function TableBonds({name, wallet, setWallet}) {
+function TableBonds({ name, wallet, setWallet }) {
     const [showModal, setModalVisibility] = React.useState(false)
     const [idToChange, setIdToChange] = React.useState(-1)
 
@@ -44,24 +44,24 @@ function TableBonds({name, wallet, setWallet}) {
 
     return (
         <>
-        <table className="table">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Count</th>
-                    {interestRatesHeaders}
-                    <th>Current value</th>
-                    <th>Edit</th>
-                </tr>
-            </thead>
-            <tbody>
-                {rows}
-            </tbody>
-        </table>
-        <br />
-        <h2 className="heading-tetriary">Overall value: {cumulated.toLocaleString("pl-PL")} PLN</h2>
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Count</th>
+                        {interestRatesHeaders}
+                        <th>Current value</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {rows}
+                </tbody>
+            </table>
+            <br />
+            <h2 className="heading-tetriary">Overall value: {cumulated.toLocaleString("pl-PL")} PLN</h2>
 
-        {showModal && <EditEntryModal idToChange={idToChange} name="edo10" category="bond" closeModal={() => setModalVisibility(false)} wallet={wallet} setWallet={setWallet}/>}
+            {showModal && <EditEntryModal idToChange={idToChange} name="edo10" category="bond" closeModal={() => setModalVisibility(false)} wallet={wallet} setWallet={setWallet} />}
         </>
     )
 }

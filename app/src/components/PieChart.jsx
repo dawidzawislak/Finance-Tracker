@@ -4,7 +4,7 @@ function PieChart(props) {
 
     const options = {
         is3D: true,
-        chartArea: {left:0,top:0, width: "100%", height: "100%"},
+        chartArea: { left: 0, top: 0, width: "100%", height: "100%" },
         legend: { position: 'labeled' },
         pieSliceText: 'none',
         tooltip: { trigger: 'none' },

@@ -1,14 +1,14 @@
 table {
-    width: 100%;
-    font-size: 1.8rem;
-    border-collapse: collapse;
-    border-radius: 9px;
-    border-style: hidden;
-    -webkit-box-shadow: 6px 6px 20px 0px rgba(66, 68, 90, 0.75);
-    -moz-box-shadow: 6px 6px 20px 0px rgba(66, 68, 90, 0.75);
-    box-shadow: 6px 6px 20px 0px rgba(66, 68, 90, 0.75);
-    overflow: hidden;
-    transition: all 0.3s;
+  width: 100%;
+  font-size: 1.8rem;
+  border-collapse: collapse;
+  border-radius: 9px;
+  border-style: hidden;
+  -webkit-box-shadow: 6px 6px 20px 0px rgba(66, 68, 90, 0.75);
+  -moz-box-shadow: 6px 6px 20px 0px rgba(66, 68, 90, 0.75);
+  box-shadow: 6px 6px 20px 0px rgba(66, 68, 90, 0.75);
+  overflow: hidden;
+  transition: all 0.3s;
 }
 
 table:hover {
@@ -19,20 +19,21 @@ table:hover {
 }
 
 table th {
-    background-color: #e67e22;
+  background-color: #e67e22;
 }
 
 table tr:nth-child(odd) {
-    background-color: #eee;
+  background-color: #eee;
 }
 
 table tr:hover {
   background-color: #fdf2e9 !important;
 }
 
-table th, .table td {
-    padding: 0.5rem;
-    text-align: center;
+table th,
+.table td {
+  padding: 0.5rem;
+  text-align: center;
 }
 
 #modal {
@@ -55,10 +56,12 @@ table th, .table td {
 }
 
 #modal::backdrop {
-  background-color: rgba(0,0,0,0.7);
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
-input[type="number"], input[type="date"], select {
+input[type="number"],
+input[type="date"],
+select {
   border-radius: 6px;
   border: 1px solid #666;
   font-size: 1.8rem;
@@ -78,42 +81,49 @@ input[type="date"] {
   right: 10px;
 }
 
-  .modal-btn, .btn-edit {
-    width: 3rem;
-    height: 3rem;
-    font-weight: 500;
-    font-size: 2.4rem;
-    border: none;
-    border-radius: 10px;
-    margin-left: 1rem;
-    cursor: pointer;
-  }
-  .btn-edit {
-    border: 1px #666 solid;
-  }
+.modal-btn,
+.btn-edit {
+  width: 3rem;
+  height: 3rem;
+  font-weight: 500;
+  font-size: 2.4rem;
+  border: none;
+  border-radius: 10px;
+  margin-left: 1rem;
+  cursor: pointer;
+}
 
-  .modal-btn-cross {
-    background-color: rgb(255, 56, 56);
-  }
-  .modal-btn-cross:hover {
-    background-color: rgb(231, 44, 44);
-  }
-  .modal-btn-tick {
-    background-color: rgb(93, 188, 93);
-  }
-  .modal-btn-tick:hover {
-    background-color: rgb(62, 165, 62);
-  }
-  .modal-btn-bin:hover, .btn-edit:hover {
-    background-color: rgb(232, 232, 232);
-  }
-  
-  input::-webkit-outer-spin-button,
-  input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-  
-  input[type=number] {
-    -moz-appearance: textfield;
-  }
+.btn-edit {
+  border: 1px #666 solid;
+}
+
+.modal-btn-cross {
+  background-color: rgb(255, 56, 56);
+}
+
+.modal-btn-cross:hover {
+  background-color: rgb(231, 44, 44);
+}
+
+.modal-btn-tick {
+  background-color: rgb(93, 188, 93);
+}
+
+.modal-btn-tick:hover {
+  background-color: rgb(62, 165, 62);
+}
+
+.modal-btn-bin:hover,
+.btn-edit:hover {
+  background-color: rgb(232, 232, 232);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}

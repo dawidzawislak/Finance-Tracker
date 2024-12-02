@@ -1,11 +1,11 @@
 import editIcon from '../assets/edit-icon.png'
 
 function TableRowBonds(props) {
-    const {elem, years} = props
+    const { elem, years } = props
 
     const interestRates = []
     for (let i = 1; i <= years; i++) {
-        interestRates.push(<td  key={i}>{elem['opr'+i]} {elem['opr'+i] && '%'}</td>)
+        interestRates.push(<td key={i}>{elem['opr' + i]} {elem['opr' + i] && '%'}</td>)
     }
 
     return (

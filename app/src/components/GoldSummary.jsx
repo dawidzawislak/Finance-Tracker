@@ -1,12 +1,12 @@
 import React from "react"
 import { round, getDeltaStyle } from "../utils"
 
-function GoldSummary({wallet, price}) {
+function GoldSummary({ wallet, price }) {
     const goldData = wallet['commodity']['gold']['entries']
 
     const mass = goldData.reduce((acc, entry) => acc + entry.count, 0)
     const priceAll = goldData.reduce((acc, entry) => acc + (entry.unitPrice * entry.count), 0)
-    const avgPrice = round(priceAll/mass)
+    const avgPrice = round(priceAll / mass)
     const currPrice = round(price['commodity']['gold']['value'] * 1.049)
     const currValue = currPrice * mass
 

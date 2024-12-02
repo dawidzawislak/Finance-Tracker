@@ -1,8 +1,8 @@
 export const round = (num) => Math.round((num + Number.EPSILON) * 100) / 100
 
-export const getDeltaStyle  = (currValue, priceAll) => {
+export const getDeltaStyle = (currValue, priceAll) => {
     let deltaStyle = {}
-    let delta = round((currValue/priceAll - 1)*100);
+    let delta = round((currValue / priceAll - 1) * 100);
     if (currValue > priceAll) {
         delta = '+' + delta
         deltaStyle.color = 'green';
@@ -24,11 +24,11 @@ export const getDatesBetween = (start, end, samples = -1) => {
     let step = 1;
 
     if (samples > 0 && daysDifference > samples) {
-        step = Math.ceil(daysDifference / (samples-1));
+        step = Math.ceil(daysDifference / (samples - 1));
     }
 
     while (startDate < endDate) {
-        dates.push(new Date(startDate).toISOString().split('T')[0]); 
+        dates.push(new Date(startDate).toISOString().split('T')[0]);
         startDate.setDate(startDate.getDate() + step);
     }
     dates.push(end);
@@ -51,12 +51,12 @@ export const getBondValue = (bond, time) => {
 
     let i = 1
     while (years > 1) {
-        currVal *= bond[`int${i}`] != '' ? 1 + Number(bond[`int${i}`])/100 : 1;
+        currVal *= bond[`int${i}`] != '' ? 1 + Number(bond[`int${i}`]) / 100 : 1;
         years--;
         i++;
     }
-    currVal *= bond[`int${i}`] != '' ? 1 + Number(bond[`int${i}`])/100*years : 1;
-    
+    currVal *= bond[`int${i}`] != '' ? 1 + Number(bond[`int${i}`]) / 100 * years : 1;
+
     return round(currVal);
 }
 
@@ -73,7 +73,7 @@ export const getBondValues = (wallet, timeStamps) => {
         });
         values.push([value, accInv]);
     });
-    
+
     return values;
 }
 
@@ -82,7 +82,7 @@ export const getValues = async (asset, timeStamps, wallet, exchangeRatesCache) =
 
     await Promise.all(Object.keys(wallet[asset]).map(async (name) => {
         const price = await fetch(`http://localhost:8000/historical_data/${name}?start=${timeStamps[0]}&end=${timeStamps.at(-1)}`).then(response => response.json());
-        if (price.curr != 'PLN'&& !exchangeRatesCache[price.curr]) {
+        if (price.curr != 'PLN' && !exchangeRatesCache[price.curr]) {
             exchangeRatesCache[price.curr] = await fetch(`http://localhost:8000/historical_data/${price.curr.toLowerCase()}pln?start=${timeStamps[0]}&end=${timeStamps.at(-1)}`).then(response => response.json());
         }
 
@@ -99,7 +99,7 @@ export const getValues = async (asset, timeStamps, wallet, exchangeRatesCache) =
             values[time][1] += invested;
         }
     }));
-    
+
     return Object.values(values);
 };
 
@@ -109,7 +109,7 @@ export const getChartData = async (timeStamps, wallet) => {
         data.push([time]);
     });
 
-    const dict = {'ETFs': 'etf', 'Cryptocurrencies': 'crypto', 'Commodities': 'commodity', 'Bonds': 'bond'};
+    const dict = { 'ETFs': 'etf', 'Cryptocurrencies': 'crypto', 'Commodities': 'commodity', 'Bonds': 'bond' };
 
     const exchangeRatesCache = {};
 
@@ -128,7 +128,7 @@ export const getChartData = async (timeStamps, wallet) => {
             if (i == 0) {
                 return [...v, category, `${category} invested`];
             }
-            return [...v, values[i-1][0] ? values[i-1][0] : 0, values[i-1][1] ? values[i-1][1] : 0];
+            return [...v, values[i - 1][0] ? values[i - 1][0] : 0, values[i - 1][1] ? values[i - 1][1] : 0];
         });
     }));
 
@@ -158,13 +158,13 @@ export function getColumnsWithHeader(array, columnNames) {
         if (name === 'Date') {
             continue;
         }
-        for (let i = data.length-1; i > 1; i--) {
-            const delta = data[i][getIndex(data, `${name} invested`)] - data[i-1][getIndex(data, `${name} invested`)];
+        for (let i = data.length - 1; i > 1; i--) {
+            const delta = data[i][getIndex(data, `${name} invested`)] - data[i - 1][getIndex(data, `${name} invested`)];
             data[i][getIndex(data, `${name} invested`)] = delta != 0 ? `+${delta.toFixed(2)}` : null;
         }
-    
+
         data[1][getIndex(data, `${name} invested`)] = null;
-    
+
         data[0][getIndex(data, `${name} invested`)] = { role: "annotation" };
     }
 

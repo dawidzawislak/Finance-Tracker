@@ -3,7 +3,7 @@ import React from 'react'
 import editIcon from '../assets/edit-icon.png'
 import EditEntryModal from './EditEntryModal.jsx'
 
-function GoldTable({wallet, setWallet}) {
+function GoldTable({ wallet, setWallet }) {
     const [showModal, setModalVisibility] = React.useState(false)
     const [idToChange, setIdToChange] = React.useState(-1)
 
@@ -13,7 +13,7 @@ function GoldTable({wallet, setWallet}) {
     }
 
     const rows = wallet['commodity']['gold']['entries'].map((entry, i) => {
-        return(
+        return (
             <tr key={i}>
                 <td>{entry.date}</td>
                 <td>{entry.count * entry.unitPrice}</td>
@@ -28,23 +28,23 @@ function GoldTable({wallet, setWallet}) {
 
     return (
         <>
-        <div style={{width: '60%'}}>
-        <table className="table" >
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Price [PLN]</th>
-                    <th>Count [oz.]</th>
-                    <th>Price / oz. [PLN]</th>
-                    <th>Edytuj</th>
-                </tr>
-            </thead>
-            <tbody>
-                {rows}
-            </tbody>
-        </table>
-        </div>
-        {showModal && <EditEntryModal closeModal={() => setModalVisibility(false)} wallet={wallet} setWallet={setWallet} category='commodity' name='gold' idToChange={idToChange} /> }
+            <div style={{ width: '60%' }}>
+                <table className="table" >
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Price [PLN]</th>
+                            <th>Count [oz.]</th>
+                            <th>Price / oz. [PLN]</th>
+                            <th>Edytuj</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {rows}
+                    </tbody>
+                </table>
+            </div>
+            {showModal && <EditEntryModal closeModal={() => setModalVisibility(false)} wallet={wallet} setWallet={setWallet} category='commodity' name='gold' idToChange={idToChange} />}
         </>
     )
 }
