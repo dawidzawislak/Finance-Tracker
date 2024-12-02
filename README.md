@@ -8,10 +8,10 @@ To run application with server on Windows you can execute `run.bat` file, it wil
 ## Demo
 
 ### Summary page:
-![Zrzut ekranu 2024-11-30 233435](https://github.com/user-attachments/assets/b74555f3-fd4d-48a5-8860-990561e2c915)
+![Zrzut ekranu 2024-12-03 004828](https://github.com/user-attachments/assets/11c4ab82-0153-47f1-bc17-06338b297004)
 
 ### Asset page example:
-![Zrzut ekranu 2024-11-30 233454](https://github.com/user-attachments/assets/64c3cac2-90c2-49ca-8288-0a39ab506cea)
+![Zrzut ekranu 2024-12-03 004916](https://github.com/user-attachments/assets/0ec77cfc-f4da-4e2f-a1dc-a7ec90d1ddb4)
 
 ### Modal window for editing entries:
-![Zrzut ekranu 2024-11-30 233510](https://github.com/user-attachments/assets/52505eb0-ba74-4a06-8184-98f6477f77fe)
+![Zrzut ekranu 2024-12-03 004937](https://github.com/user-attachments/assets/9f036492-3cb4-4331-9e81-c2c7eb1bc823)
