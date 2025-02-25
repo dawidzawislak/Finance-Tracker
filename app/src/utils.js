@@ -103,6 +103,30 @@ export const getValues = async (asset, timeStamps, wallet, exchangeRatesCache) =
     return Object.values(values);
 };
 
+export const getValuesNamed = async (asset, name, timeStamps, wallet, exchangeRatesCache) => {
+    const values = Object.fromEntries(timeStamps.map(key => [key, [0, 0]]));
+
+    const price = await fetch(`http://localhost:8000/historical_data/${name}?start=${timeStamps[0]}&end=${timeStamps.at(-1)}`).then(response => response.json());
+    if (price.curr != 'PLN' && !exchangeRatesCache[price.curr]) {
+        exchangeRatesCache[price.curr] = await fetch(`http://localhost:8000/historical_data/${price.curr.toLowerCase()}pln?start=${timeStamps[0]}&end=${timeStamps.at(-1)}`).then(response => response.json());
+    }
+
+    for (const time of timeStamps) {
+        let accCount = 0;
+        let invested = 0;
+        wallet[asset][name]['entries'].forEach((entry) => {
+            if (entry.date <= time) {
+                accCount += entry.count;
+                invested += (entry.price ? entry.price : entry.count * entry.unitPrice) + (entry.fee ? entry.fee : 0);
+            }
+        });
+        values[time][0] += accCount * price.values[time] * (price.curr != 'PLN' ? exchangeRatesCache[price.curr].values[time] : 1) * (name == "gold" ? 1.049 : 1);
+        values[time][1] += invested;
+    }
+
+    return Object.values(values);
+};
+
 export const getChartData = async (timeStamps, wallet) => {
     let data = [["Date"]];
     timeStamps.forEach((time) => {
@@ -139,6 +163,31 @@ export const getChartData = async (timeStamps, wallet) => {
         const value = v.filter((_, index) => index > 0 && index % 2 == 1).reduce((acc, curr) => acc + curr, 0);
         const invested = v.filter((_, index) => index > 0 && index % 2 == 0).reduce((acc, curr) => acc + curr, 0);
         return [...v, value, invested];
+    });
+
+    return data;
+}
+
+export const getChartDataETF = async (timeStamps, wallet, name) => {
+    let data = [["Date"]];
+    timeStamps.forEach((time) => {
+        data.push([time]);
+    });
+
+    const exchangeRatesCache = {};
+
+    await Promise.all(['EUR', 'GBP', 'USD'].map(async (curr) => {
+        exchangeRatesCache[curr] = await fetch(`http://localhost:8000/historical_data/${curr.toLowerCase()}pln?start=${timeStamps[0]}&end=${timeStamps.at(-1)}`).then(response => response.json());
+    }));
+
+    
+    let values = await getValuesNamed('etf', name, timeStamps, wallet, exchangeRatesCache);
+
+    data = data.map((v, i) => {
+        if (i == 0) {
+            return [...v, 'Value', `Invested`];
+        }
+        return [...v, values[i - 1][0] ? values[i - 1][0] : 0, values[i - 1][1] ? values[i - 1][1] : 0];
     });
 
     return data;

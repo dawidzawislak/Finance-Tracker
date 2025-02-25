@@ -48,6 +48,12 @@
   -webkit-box-shadow: 4px 4px 16px 0px rgba(66, 68, 90, 0.75);
   -moz-box-shadow: 4px 4px 16px 0px rgba(66, 68, 90, 0.75);
   box-shadow: 4px 4px 16px 0px rgba(66, 68, 90, 0.75);
+  position: relative;
+}
+
+.chart-container {
+  width: 90%;
+  margin: 0 auto;
 }
 
 .buy-panel {

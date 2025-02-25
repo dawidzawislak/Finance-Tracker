@@ -1,6 +1,11 @@
+import React, {useState} from "react"
 import {round, getDeltaStyle} from '../utils.js'
+import ChartModal from './ChartModal.jsx';
+import chartIcon from '../assets/chart-icon.png'
 
 function ETFSummary({wallet, exchangeRates, index, price}) {
+    const [showModal, setModalVisibility] = useState(false)
+
     const currency = price['etf'][index]['curr'];
 
     const etfData = wallet.etf[index].entries
@@ -22,6 +27,10 @@ function ETFSummary({wallet, exchangeRates, index, price}) {
             <br />
             <h3 className="heading-tetriary">Current unit price: {currency !== 'PLN' && <span>{round(currPrice * exchangeRates[currency]).toLocaleString('pl-PL')} PLN / </span>}{currPrice.toLocaleString('pl-PL')} {currency}</h3>
             <h3 className="heading-tetriary">Current value: <span style={deltaStyle}>{currValue.toLocaleString('pl-PL')} zł ({delta}%)</span></h3>
+            <button onClick={() => setModalVisibility(true)} className="btn-edit btn-chart">
+                <img src={chartIcon} alt="chartIcon" width={22} />
+            </button>
+            {showModal && <ChartModal closeModal={() => setModalVisibility(false)} wallet={wallet} firstTransaction={etfData.reduce((currLowest, entry) => new Date(entry.date) < new Date(currLowest) ? entry.date : currLowest, new Date().toISOString().split('T')[0])} name={index} />}
         </div>
     )
 }

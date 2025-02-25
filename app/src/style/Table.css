@@ -97,6 +97,15 @@ input[type="date"] {
   border: 1px #666 solid;
 }
 
+.btn-chart {
+  position: absolute;
+  top: 1.6rem;
+  right: 1.6rem;
+  width: 4rem;
+  height: 4rem;
+  z-index: 100;
+}
+
 .modal-btn-cross {
   background-color: rgb(255, 56, 56);
 }
