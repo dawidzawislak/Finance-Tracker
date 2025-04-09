@@ -154,32 +154,36 @@ function StructurePage({ wallet, price, exchangeRates, accumulatedCount, investe
                             <PieChart
                                 data={pieChartData}
                                 width={"100%"}
-                                height={"300px"}
+                                height={"400px"}
                             />
-                            <h3 style={{ marginTop: "30px" }} className="heading-secondary-no-margin">Current value: {curr_value.toLocaleString("pl-PL")} PLN <span style={deltaStyle}>({diff} %)</span></h3>
-                            <h4 className="heading-tetriary">Invested value: {inv_value.toLocaleString("pl-PL")} PLN</h4>
                         </div>
-                        <div style={{ width: "50%" }}>
-                            <div className="checkboxes">
-                                {checkboxes}
-                            </div>
-                            <LineChart
-                                data={chartData}
-                                width={"100%"}
-                                height={"300px"}
-                            />
-                            <form className="interval-btns">
-                                <button onClick={(evnt) => setStartDate('WEEK', evnt)}>WEEK</button>
-                                <button onClick={(evnt) => setStartDate('MONTH', evnt)}>MONTH</button>
-                                <button onClick={(evnt) => setStartDate('YEAR', evnt)}>YEAR</button>
-                                <button onClick={(evnt) => { evnt.preventDefault(); setStart(firstTransaction) }}>MAX</button>
-                            </form>
-                            <div style={{ display: "flex", justifyContent: "space-between", fontSize: "20px", marginTop: "15px", padding: "0 20px" }}>
-                                <label>Start date: <input type="date" value={start} onChange={(ev) => setStart(ev.target.value)}></input></label>
-                                <label>End date: <input type="date" value={end} onChange={(ev) => setEnd(ev.target.value)}></input></label>
-                            </div>
+                        <div style={{ width: "50%", paddingLeft: "100px"}}>
+                            <h3 style={{ marginTop: "140px" }} className="heading-secondary-no-margin">Current value: {curr_value.toLocaleString("pl-PL")} PLN <span style={deltaStyle}>({diff} %)</span></h3>
+                            <h4 style={{ marginTop: "10px" }} className="heading-tetriary">Invested value: {inv_value.toLocaleString("pl-PL")} PLN</h4>
                         </div>
                     </div>
+                    <hr />
+                    <div style={{margin: "50px 0"}}>
+                        <div className="checkboxes">
+                            {checkboxes}
+                        </div>
+                        <LineChart
+                            data={chartData}
+                            width={"100%"}
+                            height={"600px"}
+                        />
+                        <form className="interval-btns">
+                            <button onClick={(evnt) => setStartDate('WEEK', evnt)}>WEEK</button>
+                            <button onClick={(evnt) => setStartDate('MONTH', evnt)}>MONTH</button>
+                            <button onClick={(evnt) => setStartDate('YEAR', evnt)}>YEAR</button>
+                            <button onClick={(evnt) => { evnt.preventDefault(); setStart(firstTransaction) }}>MAX</button>
+                        </form>
+                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: "20px", marginTop: "15px", padding: "0 20px" }}>
+                            <label>Start date: <input type="date" value={start} onChange={(ev) => setStart(ev.target.value)}></input></label>
+                            <label>End date: <input type="date" value={end} onChange={(ev) => setEnd(ev.target.value)}></input></label>
+                        </div>
+                    </div>
+                    <hr />
                     <SummaryTable allChartData={allChartData} />
                 </main>
             </div>

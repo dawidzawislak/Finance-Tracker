@@ -22,7 +22,7 @@ function ChartModal({ closeModal, wallet, firstTransaction, name }) {
 
     React.useEffect(() => {
         getChartDataETF(getDatesBetween(start, end, 100), wallet, name).then((data) => {
-           setChartData(data)
+            setChartData(data)
         })
     }, [start, end])
 
@@ -55,7 +55,7 @@ function ChartModal({ closeModal, wallet, firstTransaction, name }) {
                 </div>
             </form>
             <div className="chart-container">
-                <LineChart data={chartData}/>
+                <LineChart data={chartData} height="400px"/>
             </div>
             <form className="interval-btns">
                 <button onClick={(evnt) => setStartDate('WEEK', evnt)}>WEEK</button>
