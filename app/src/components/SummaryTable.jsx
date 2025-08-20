@@ -45,9 +45,11 @@ function SummaryTable({ allChartData }) {
                             deltaWOInv = ((row[getIndex(allChartData, name)]) / (allChartData[startInd[name]][getIndex(allChartData, name)] + invested[name]) - 1) * 100;
                         }
                     }
+                    const style = {backgroundColor: i > 1 && (allChartData[i][getIndex(allChartData, name)] > allChartData[i-1][getIndex(allChartData, name)] ? "#B0FFB0" : ((allChartData[i][getIndex(allChartData, name)] < allChartData[i-1][getIndex(allChartData, name)] && "#ffC1C1")))};
+
                     return (<>
-                        <td key={name + j + "v"}>{round(row[getIndex(allChartData, name)]).toLocaleString("pl-PL")} PLN{delta != 0 && formatDelta(delta)}</td>
-                        <td key={name + j + "i"} style={{ fontSize: "14px" }}>{formatDelta2(deltaABS, '', 'PLN')} {formatDelta2(deltaWOInv, '(', '%)')}</td>
+                        <td style={style} key={name + j + "v"}>{round(row[getIndex(allChartData, name)]).toLocaleString("pl-PL")} PLN{delta != 0 && formatDelta(delta)}</td>
+                        <td key={name + j + "i"} style={{...style,  fontSize: "14px" }}>{formatDelta2(deltaABS, '', 'PLN')} {formatDelta2(deltaWOInv, '(', '%)')}</td>
                     </>)
                 })}
             </tr>

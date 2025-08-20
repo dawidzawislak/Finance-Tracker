@@ -1,6 +1,7 @@
 .flex {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
 }
 
 .content {
@@ -83,7 +84,8 @@
 }
 
 .buy-panel button,
-.interval-btns button {
+.interval-btns button,
+.btn-orange {
   background-color: #e67e22;
   color: white;
   padding: 7px 14px;

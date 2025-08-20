@@ -26,8 +26,12 @@
     font-size: 16px;
 }
 
-.summary-table tr:nth-child(odd) {
-    background-color: #e8e8e8;
+.summary-table tr:hover td {
+    background-color: #e8e8e8 !important;
+}
+
+.summary-table tr:hover {
+   border: 1px solid #888;
 }
 
 .summary-table th {

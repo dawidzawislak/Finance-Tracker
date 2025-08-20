@@ -6,20 +6,23 @@ import Loader from "./components/Loader"
 import './style/StructurePage.css'
 import { getBondValue, getDatesBetween, round, getChartData, getColumnsWithHeader, getIndex } from "./utils"
 
-function StructurePage({ wallet, price, exchangeRates, accumulatedCount, investedValue }) {
+function StructurePage({ inflation, inflationMonthly, wallet, price, exchangeRates, accumulatedCount, investedValue }) {
     const [values, setValues] = React.useState({})
     const [pieChartData, setPieChartData] = React.useState([])
     const [chartData, setChartData] = React.useState([])
-    const options = ["ETFs", "Bonds", "Cryptocurrencies", "Commodities", "All"];
-    const dictFriendlyNames = { 'etf': 'ETFs', 'crypto': 'Cryptocurrencies', 'commodity': 'Commodities', 'bond': 'Bonds' };
+    const options = ["ETFs", "Bonds", "Cryptocurrencies", "Commodities", "Cash", "All"];
+    const dictFriendlyNames = { 'etf': 'ETFs', 'crypto': 'Cryptocurrencies', 'commodity': 'Commodities', 'bond': 'Bonds', 'currency': 'Cash' };
     const [checkedItems, setCheckedItems] = React.useState(
         options.reduce((acc, option) => ({ ...acc, [option]: (option == "All") }), {})
     );
     const [allChartData, setAllChartData] = React.useState([]);
     const [firstTransaction, setFirstTransaction] = React.useState(new Date().toISOString().split('T')[0])
 
+    if(!inflation)
+        return <Loader />
+
     const startD = new Date()
-    startD.setFullYear(startD.getFullYear() - 1);
+    startD.setMonth(startD.getMonth() - 1);
 
     const [start, setStart] = React.useState(startD.toISOString().split('T')[0])
     const [end, setEnd] = React.useState(new Date().toISOString().split('T')[0])
@@ -58,13 +61,18 @@ function StructurePage({ wallet, price, exchangeRates, accumulatedCount, investe
                             _firstTransaction = accumulatedCount[category][name][0].date;
                         }
                         let last = accumulatedCount[category][name].at(-1);
-                        value += last.count * price[category][name].value * exchangeRates[price[category][name].curr] * (name == "gold" ? 1.049 : 1);
+                        if (category === "currency") {
+                            value += last.count * exchangeRates[name.toUpperCase()];
+                        }
+                        else {
+                            value += last.count * price[category][name].value * exchangeRates[price[category][name].curr] * (name == "gold" ? 1.049 : 1);
+                        }
                     }
                 });
             } else {
                 Object.keys(wallet[category]).forEach((name) => {
                     wallet[category][name]['entries'].forEach((bond) => {
-                        value += getBondValue(bond, new Date().toISOString().split('T')[0]);
+                        value += getBondValue(bond, new Date().toISOString().split('T')[0], inflation)
                         const date1 = new Date(bond.date);
                         const date2 = new Date(_firstTransaction);
                         if (date1 < date2) {
@@ -80,11 +88,11 @@ function StructurePage({ wallet, price, exchangeRates, accumulatedCount, investe
         setFirstTransaction(_firstTransaction)
 
         setPieChartData(_chartData.map((row) => [`${row[0]}\n${round(row[1]).toLocaleString('pl-PL')} PLN`, row[1]]))
-        getChartData(getDatesBetween(start, end, 100), wallet).then((data) => {
-            if (_chartData.length > 1) {
+        getChartData(getDatesBetween(start, end, 100), wallet, inflation).then((data) => {
+            if (end === new Date().toISOString().split('T')[0]) {
                 let all = 0;
                 _chartData.forEach((row) => {
-                    if (['Bonds', 'ETFs', 'Cryptocurrencies', 'Commodities'].includes(row[0])) {
+                    if (['Bonds', 'ETFs', 'Cryptocurrencies', 'Commodities', 'Cash'].includes(row[0])) {
                         data[data.length - 1][getIndex(data, row[0])] = row[1]
                         all += row[1]
                     }
@@ -92,8 +100,61 @@ function StructurePage({ wallet, price, exchangeRates, accumulatedCount, investe
 
                 data[data.length - 1][getIndex(data, 'All')] = all
             }
+
             setAllChartData(data)
+            
+            console.log(data)
+            console.log(inflationMonthly["2025"])
+
+            const all_ind = getIndex(data, "All");
+            const invested_ind = getIndex(data, "All invested");
+            let invested = 0;
+            const [_, startMonth, startDay] = data[1][0].split("-");
+            let prev = 0;
+            const return_values = data.map((row, i) => {
+                if (i === 0) return ["Date", "Return", "Inflation"];
+                else if (i === 1) return [row[0], 0, 0];
+                else {
+                    const delta = (row[invested_ind] - data[i - 1][invested_ind]);
+                    if (data[i - 1][invested_ind] > 0) {
+                        invested += delta;
+                    }
+
+                    let [year, month, day] = row[0].split("-");
+                    let inflation = 0;
+                    if (month != 1) {
+                        month = Number(month)-1;
+                    } else {
+                        year = Number(year) - 1;
+                        month = Number(month) + 11;
+                    }
+
+                    console.log(year, month)
+
+                    if (startMonth == month) {
+                        inflation = (inflationMonthly[year][month]-100)*(day-startDay)/(30)
+                    } else {
+                        inflation = (inflationMonthly[year][month]-100)*day/30
+                    }
+
+                    
+                    const deltaWOInv = ((row[all_ind]) / (data[1][all_ind] + invested) - 1) * 100;
+                    
+                    if (row[0].split("-")[1] != data[i-1][0].split("-")[1]) {
+                        console.log("PREV", prev, inflation, (1+(inflation)))
+                        inflation = prev * (1+inflation)
+                    }
+
+                    prev = inflation;
+
+                    return [row[0], deltaWOInv, inflation]
+                }
+            })
+
+            console.log(return_values);
+
             setChartData(getColumnsWithHeader(data, Object.keys(checkedItems).filter((key) => checkedItems[key])))
+            //setChartData(return_values)
         })
     }, [wallet, start, end]);
 
@@ -163,6 +224,10 @@ function StructurePage({ wallet, price, exchangeRates, accumulatedCount, investe
                         </div>
                     </div>
                     <hr />
+                    <h2 style={{marginTop: "2rem"}}className='heading-secondary'>Portfolio return value in time:</h2>
+
+                    <hr />
+                    <h2 style={{marginTop: "2rem"}}className='heading-secondary'>Portfolio value in time:</h2>
                     <div style={{margin: "50px 0"}}>
                         <div className="checkboxes">
                             {checkboxes}

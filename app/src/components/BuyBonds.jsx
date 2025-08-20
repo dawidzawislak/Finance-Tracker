@@ -2,7 +2,7 @@ import React from 'react'
 
 function BuyBonds({ wallet, setWallet }) {
     const [avaiable, setAvailable] = React.useState([])
-    const [params, setParams] = React.useState({ 'type': '', 'date': '', 'count': '', 'interest': '' })
+    const [params, setParams] = React.useState({ 'type': '', 'date': '', 'count': '', 'interest': '', 'margin': '' })
 
     React.useEffect(() => {
         fetch('http://localhost:8000/available/bond').then(response => response.json()).then(bonds => {
@@ -13,15 +13,9 @@ function BuyBonds({ wallet, setWallet }) {
     const handleBuy = (ev) => {
         ev.preventDefault()
 
-        if (!params['type'] || !params['date'] || !params['count'] || !params['interest']) {
+        if (!params['type'] || !params['date'] || !params['count'] || !params['interest'] || !params['margin']) {
             alert('Please fill all fields')
             return
-        }
-
-        let rates = {}
-        const match = params['type'].match(/\d+$/);
-        for (let i = 2; i <= parseInt(match[0], 10); i++) {
-            rates['int' + i] = null
         }
 
         const _wallet = { ...wallet }
@@ -30,7 +24,7 @@ function BuyBonds({ wallet, setWallet }) {
             'price': Number(params['count']) * 100,
             'count': Number(params['count']),
             'int1': Number(params['interest']),
-            ...rates
+            'margin': Number(params['margin']),
         })
 
         setWallet(_wallet)
@@ -44,7 +38,7 @@ function BuyBonds({ wallet, setWallet }) {
         }).then(response => {
             if (response.ok) {
                 alert('Bought successfully')
-                setParams({ 'type': '', 'date': '', 'count': '', 'interest': '' })
+                setParams({ 'type': '', 'date': '', 'count': '', 'interest': '', 'margin': '' })
             } else {
                 alert('Failed to buy')
             }
@@ -82,6 +76,10 @@ function BuyBonds({ wallet, setWallet }) {
                 <label>
                     Interest rate:
                     <input type='number' name='interest' value={params['interest']} onChange={handleChange} />
+                </label>
+                <label>
+                    Margin:
+                    <input type='number' name='margin' value={params['margin']} onChange={handleChange} />
                 </label>
                 <button onClick={handleBuy}>Buy</button>
             </div>

@@ -22,7 +22,7 @@ table th {
   background-color: #e67e22;
 }
 
-table tr:nth-child(odd) {
+.table tr:nth-child(odd) {
   background-color: #eee;
 }
 

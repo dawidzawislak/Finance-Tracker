@@ -39,7 +39,7 @@ export const getDatesBetween = (start, end, samples = -1) => {
   return dates;
 };
 
-export const getBondValue = (bond, time) => {
+export const getBondValue = (bond, time, inflation) => {
   const start = new Date(bond.date);
   const now = new Date(time);
 
@@ -54,17 +54,39 @@ export const getBondValue = (bond, time) => {
 
   let i = 1;
   while (years > 1) {
-    currVal *= bond[`int${i}`] != "" ? 1 + Number(bond[`int${i}`]) / 100 : 1;
+    if (i == 1) {
+      currVal *= bond[`int${i}`] != "" ? 1 + Number(bond[`int${i}`]) / 100 : 1;
+    } else {
+      currVal *=
+        (bond["margin"] +
+          inflation[start.getFullYear() + i - 1][
+            start.getMonth() - 1 < 0
+              ? start.getMonth() + 11
+              : start.getMonth() - 1
+          ]) /
+        100;
+    }
     years--;
     i++;
   }
   currVal *=
-    bond[`int${i}`] != "" ? 1 + (Number(bond[`int${i}`]) / 100) * years : 1;
+    (100 +
+      (i > 1
+        ? bond["margin"] +
+          inflation[start.getFullYear() + i - 1][
+            start.getMonth() - 1 < 0
+              ? start.getMonth() + 11
+              : start.getMonth() - 1
+          ] -
+          100
+        : bond["int1"]) *
+        years) /
+    100;
 
   return round(currVal);
 };
 
-export const getBondValues = (wallet, timeStamps) => {
+export const getBondValues = (wallet, timeStamps, inflation) => {
   let values = [];
   timeStamps.forEach((time) => {
     let value = 0;
@@ -72,7 +94,7 @@ export const getBondValues = (wallet, timeStamps) => {
     Object.keys(wallet.bond).forEach((name) => {
       wallet.bond[name]["entries"].forEach((bond) => {
         accInv += bond.date <= time ? bond.count * 100 : 0;
-        value += getBondValue(bond, time);
+        value += getBondValue(bond, time, inflation);
       });
     });
     values.push([value, accInv]);
@@ -91,12 +113,25 @@ export const getValues = async (
 
   await Promise.all(
     Object.keys(wallet[asset]).map(async (name) => {
-      const price = await fetch(
-        `http://localhost:8000/historical_data/${name}?start=${
-          timeStamps[0]
-        }&end=${timeStamps.at(-1)}`
-      ).then((response) => response.json());
-      if (price.curr != "PLN" && !exchangeRatesCache[price.curr]) {
+      let price;
+      if (asset !== "currency") {
+        price = await fetch(
+          `http://localhost:8000/historical_data/${name}?start=${
+            timeStamps[0]
+          }&end=${timeStamps.at(-1)}`
+        ).then((response) => response.json());
+      }
+      if (asset === "currency" && name !== "pln") {
+        exchangeRatesCache[name.toUpperCase()] = await fetch(
+          `http://localhost:8000/historical_data/${name}pln?start=${
+            timeStamps[0]
+          }&end=${timeStamps.at(-1)}`
+        ).then((response) => response.json());
+      } else if (
+        price &&
+        price.curr != "PLN" &&
+        !exchangeRatesCache[price.curr]
+      ) {
         exchangeRatesCache[price.curr] = await fetch(
           `http://localhost:8000/historical_data/${price.curr.toLowerCase()}pln?start=${
             timeStamps[0]
@@ -109,19 +144,31 @@ export const getValues = async (
         let invested = 0;
         wallet[asset][name]["entries"].forEach((entry) => {
           if (entry.date <= time) {
-            accCount += entry.count;
-            invested +=
-              (entry.price ? entry.price : entry.count * entry.unitPrice) +
-              (entry.fee ? entry.fee : 0);
+            if (asset === "currency") {
+              invested +=
+                entry.count *
+                (name !== "pln"
+                  ? exchangeRatesCache[name.toUpperCase()].values[time]
+                  : 1);
+            } else {
+              accCount += entry.count;
+              invested +=
+                (entry.price ? entry.price : entry.count * entry.unitPrice) +
+                (entry.fee ? entry.fee : 0);
+            }
           }
         });
-        values[time][0] +=
-          accCount *
-          price.values[time] *
-          (price.curr != "PLN"
-            ? exchangeRatesCache[price.curr].values[time]
-            : 1) *
-          (name == "gold" ? 1.049 : 1);
+        if (asset !== "currency") {
+          values[time][0] +=
+            accCount *
+            price.values[time] *
+            (price.curr != "PLN"
+              ? exchangeRatesCache[price.curr].values[time]
+              : 1) *
+            (name == "gold" ? 1.049 : 1);
+        } else {
+          values[time][0] += invested;
+        }
         values[time][1] += invested;
       }
     })
@@ -174,7 +221,7 @@ export const getValuesNamed = async (
   return Object.values(values);
 };
 
-export const getChartData = async (timeStamps, wallet) => {
+export const getChartData = async (timeStamps, wallet, inflation) => {
   let data = [["Date"]];
   timeStamps.forEach((time) => {
     data.push([time]);
@@ -185,6 +232,7 @@ export const getChartData = async (timeStamps, wallet) => {
     Cryptocurrencies: "crypto",
     Commodities: "commodity",
     Bonds: "bond",
+    Cash: "currency",
   };
 
   const exchangeRatesCache = {};
@@ -200,11 +248,11 @@ export const getChartData = async (timeStamps, wallet) => {
   );
 
   await Promise.all(
-    ["ETFs", "Cryptocurrencies", "Commodities", "Bonds"].map(
+    ["ETFs", "Cryptocurrencies", "Commodities", "Bonds", "Cash"].map(
       async (category) => {
         let values = [];
         if (category === "Bonds") {
-          values = getBondValues(wallet, timeStamps);
+          values = getBondValues(wallet, timeStamps, inflation);
         } else {
           values = await getValues(
             dict[category],

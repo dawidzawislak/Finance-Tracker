@@ -5,7 +5,7 @@ import { getDatesBetween, getChartDataETF } from "../utils"
 
 function ChartModal({ closeModal, wallet, firstTransaction, name }) {
     const startD = new Date()
-    startD.setFullYear(startD.getFullYear() - 1);
+    startD.setMonth(startD.getMonth() - 1);
 
     const [start, setStart] = React.useState(startD.toISOString().split('T')[0])
     const [end, setEnd] = React.useState(new Date().toISOString().split('T')[0])

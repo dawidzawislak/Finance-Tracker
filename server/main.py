@@ -11,6 +11,8 @@ CORS(app)
 
 historical_data = dict()
 avaiable_instruments = []
+inflation = dict()
+inflation_monthly = dict()
 
 stooq_mapping = {
     'vwra': 'vwra.uk',
@@ -18,6 +20,7 @@ stooq_mapping = {
     'swda': 'swda.uk',
     'is3n': 'is3n.de',
     'etfbm40tr': 'etfbm40tr.pl',
+    'vwce': 'vwce.de',
 
     'btc': 'btcpln',
     'gold': 'xaupln',
@@ -37,6 +40,7 @@ investing_mapping = {
     'usdpln': 'currencies/usd-pln',
     'eurpln': 'currencies/eur-pln',
     'gbppln': 'currencies/gbp-pln',
+    'vwce': 'etfs/vanguard-ftse-all-world-ucits-acc?cid=1148060'
 }
 
 curr_cache = {}
@@ -151,6 +155,16 @@ def avaiable(instrument):
         return ['btc']
     elif instrument == 'commodity':
         return ['gold']
+    elif instrument == 'currency':
+        return ['pln', 'eur', 'usd', 'gbp']
+
+@app.route('/inflation')
+def get_inflation():
+    return inflation
+
+@app.route('/inflation/monthly')
+def get_inflation_monthly():
+    return inflation_monthly
 
 def download_instrument_data(instrument: str):
     req = requests.get(f'https://stooq.pl/q/d/l/?s={stooq_mapping[instrument]}&i=d&c=1')
@@ -202,6 +216,20 @@ def main():
         if (not os.path.exists(f"historical/{ins}.json") or 
             datetime.datetime.fromtimestamp(os.path.getmtime(f"historical/{ins}.json")).day != datetime.datetime.now().day):
             download_instrument_data(ins)
+    
+    req = requests.get('https://stat.gov.pl/download/gfx/portalinformacyjny/pl/defaultstronaopisowa/4741/1/1/miesieczne_wskazniki_cen_towarow_i_uslug_konsumpcyjnych_od_1982_r_15-04-2025.csv')
+    if req.status_code == 200:
+        for l in req.text.split('\n')[1:]:
+            if l == '': continue
+            values = l.split(';')
+            if values[2] == 'Analogiczny miesiąc poprzedniego roku = 100' and values[5] != '':
+                if values[3] not in inflation:
+                    inflation[values[3]] = dict()
+                inflation[values[3]][values[4]] = float(values[5].replace(',', '.'))
+            elif values[2] == 'Poprzedni miesiąc = 100' and values[5] != '':
+                if values[3] not in inflation_monthly:
+                    inflation_monthly[values[3]] = dict()
+                inflation_monthly[values[3]][values[4]] = float(values[5].replace(',', '.'))
         
     app.run(host='127.0.0.1', port=8000)
 

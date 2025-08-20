@@ -17,6 +17,7 @@ function Navbar() {
                     <li className="nav-link"><NavLink to="/etf" className="nav-link">ETFs</NavLink></li>
                     <li className="nav-link"><NavLink to="/commodities" className="nav-link">Commodities</NavLink></li>
                     <li className="nav-link"><NavLink to="/crypto" className="nav-link">Cryptocurrencies</NavLink></li>
+                    <li className="nav-link"><NavLink to="/currencies" className="nav-link">Currencies</NavLink></li>
                 </ul>
             </nav>
         </header>

@@ -9,11 +9,14 @@ import CryptoPage from './CryptoPage.jsx';
 import Loader from './components/Loader.jsx';
 import './style/App.css'
 import './style/loader.css'
+import CurrenciesPage from './CurrenciesPage.jsx';
 
 function App() {
   const [wallet, setWallet] = React.useState({})
   const [accumulatedCount, setAccumulatedCount] = React.useState({})
   const [price, setPrice] = React.useState({})
+  const [inflation, setInflation] = React.useState({})
+  const [inflationMonthly, setInflationMonthly] = React.useState({})
   const [exchangeRates, setExchangeRates] = React.useState({})
   const [investedValue, setInvestedValue] = React.useState({})
   const [initialized, setInitialized] = React.useState(false)
@@ -24,6 +27,9 @@ function App() {
 
       let _exchangeRates = await fetch('http://localhost:8000/exchange_rates').then(response => response.json())
 
+      let _inflation = await fetch("http://localhost:8000/inflation").then(response => response.json())
+      let _inflationMonthly = await fetch("http://localhost:8000/inflation/monthly").then(response => response.json())
+
       let _price = {}
 
       for (const category of Object.keys(_wallet)) {
@@ -32,7 +38,7 @@ function App() {
         }
 
         for (const name of Object.keys(_wallet[category])) {
-          if (category !== "bond") {
+          if (category !== "bond" && category !== "currency") {
             _price[category][name] = await fetch(`http://localhost:8000/value/${name}`).then(response => response.json());
           }
         }
@@ -40,6 +46,8 @@ function App() {
       setPrice(_price);
       setWallet(_wallet);
       setExchangeRates(_exchangeRates);
+      setInflation(_inflation);
+      setInflationMonthly(_inflationMonthly);
       setInitialized(true);
     }
 
@@ -69,8 +77,13 @@ function App() {
             acc += entry["count"];
           });
         }
+        
         wallet[category][name]["entries"].forEach((entry) => {
-          _investedValue[category] += (entry["price"] ? entry["price"] : entry["count"] * entry["unitPrice"]) + (entry["fee"] ? entry["fee"] : 0);
+          if (category === "currency") {
+            _investedValue[category] += entry.count * exchangeRates[name.toUpperCase()]
+          } else {
+            _investedValue[category] += (entry["price"] ? entry["price"] : entry["count"] * entry["unitPrice"]) + (entry["fee"] ? entry["fee"] : 0);
+          }
         });
       }
     }
@@ -83,11 +96,12 @@ function App() {
     <>
       <Navbar />
       {initialized ? <Routes>
-        <Route path="/" element={<StructurePage investedValue={investedValue} wallet={wallet} price={price} exchangeRates={exchangeRates} accumulatedCount={accumulatedCount} />} />
-        <Route path="/bonds" element={<BondsPage wallet={wallet} setWallet={setWallet} />} />
+        <Route path="/" element={<StructurePage inflationMonthly={inflationMonthly} inflation={inflation} investedValue={investedValue} wallet={wallet} price={price} exchangeRates={exchangeRates} accumulatedCount={accumulatedCount} />} />
+        <Route path="/bonds" element={<BondsPage inflation={inflation} wallet={wallet} setWallet={setWallet} />} />
         <Route path="/etf" element={<ETFPage wallet={wallet} setWallet={setWallet} exchangeRates={exchangeRates} price={price} />} />
         <Route path="/commodities" element={<GoldPage wallet={wallet} setWallet={setWallet} price={price} />} />
         <Route path="/crypto" element={<CryptoPage wallet={wallet} setWallet={setWallet} price={price} />} />
+        <Route path="/currencies" element={<CurrenciesPage wallet={wallet} setWallet={setWallet} />} />
       </Routes> : <Loader />}
     </>
   )
